@@ -63,62 +63,62 @@ class PartieCVQ(Partie):
         self.joueur.info(u"{}".format(self.currentperiod.CVQ_decision))
         self.joueur.remove_waitmode()
 
-    def compute_periodpayoff(self):
-        """
-        Compute the payoff for the period
-        :return:
-        """
-        logger.debug(u"{} Period Payoff".format(self.joueur))
-        self.currentperiod.CVQ_periodpayoff = 0
-
-        # cumulative payoff since the first period
-        if self.currentperiod.CVQ_period < 2:
-            self.currentperiod.CVQ_cumulativepayoff = \
-                self.currentperiod.CVQ_periodpayoff
-        else: 
-            previousperiod = self.periods[self.currentperiod.CVQ_period - 1]
-            self.currentperiod.CVQ_cumulativepayoff = \
-                previousperiod.CVQ_cumulativepayoff + \
-                self.currentperiod.CVQ_periodpayoff
-
-        # we store the period in the self.periodes dictionnary
-        self.periods[self.currentperiod.CVQ_period] = self.currentperiod
-
-        logger.debug(u"{} Period Payoff {}".format(
-            self.joueur,
-            self.currentperiod.CVQ_periodpayoff))
-
-    @defer.inlineCallbacks
-    def display_summary(self, *args):
-        """
-        Send a dictionary with the period content values to the remote.
-        The remote creates the text and the history
-        :param args:
-        :return:
-        """
-        logger.debug(u"{} Summary".format(self.joueur))
-        yield(self.remote.callRemote(
-            "display_summary", self.currentperiod.todict()))
-        self.joueur.info("Ok")
-        self.joueur.remove_waitmode()
-
-    @defer.inlineCallbacks
-    def compute_partpayoff(self):
-        """
-        Compute the payoff for the part and set it on the remote.
-        The remote stores it and creates the corresponding text for display
-        (if asked)
-        :return:
-        """
-        logger.debug(u"{} Part Payoff".format(self.joueur))
-
-        self.CVQ_gain_ecus = self.currentperiod.CVQ_cumulativepayoff
-        self.CVQ_gain_euros = float(self.CVQ_gain_ecus) * float(pms.TAUX_CONVERSION)
-        yield (self.remote.callRemote(
-            "set_payoffs", self.CVQ_gain_euros, self.CVQ_gain_ecus))
-
-        logger.info(u'{} Payoff ecus {} Payoff euros {:.2f}'.format(
-            self.joueur, self.CVQ_gain_ecus, self.CVQ_gain_euros))
+    # def compute_periodpayoff(self):
+    #     """
+    #     Compute the payoff for the period
+    #     :return:
+    #     """
+    #     logger.debug(u"{} Period Payoff".format(self.joueur))
+    #     self.currentperiod.CVQ_periodpayoff = 0
+    #
+    #     # cumulative payoff since the first period
+    #     if self.currentperiod.CVQ_period < 2:
+    #         self.currentperiod.CVQ_cumulativepayoff = \
+    #             self.currentperiod.CVQ_periodpayoff
+    #     else:
+    #         previousperiod = self.periods[self.currentperiod.CVQ_period - 1]
+    #         self.currentperiod.CVQ_cumulativepayoff = \
+    #             previousperiod.CVQ_cumulativepayoff + \
+    #             self.currentperiod.CVQ_periodpayoff
+    #
+    #     # we store the period in the self.periodes dictionnary
+    #     self.periods[self.currentperiod.CVQ_period] = self.currentperiod
+    #
+    #     logger.debug(u"{} Period Payoff {}".format(
+    #         self.joueur,
+    #         self.currentperiod.CVQ_periodpayoff))
+    #
+    # @defer.inlineCallbacks
+    # def display_summary(self, *args):
+    #     """
+    #     Send a dictionary with the period content values to the remote.
+    #     The remote creates the text and the history
+    #     :param args:
+    #     :return:
+    #     """
+    #     logger.debug(u"{} Summary".format(self.joueur))
+    #     yield(self.remote.callRemote(
+    #         "display_summary", self.currentperiod.todict()))
+    #     self.joueur.info("Ok")
+    #     self.joueur.remove_waitmode()
+    #
+    # @defer.inlineCallbacks
+    # def compute_partpayoff(self):
+    #     """
+    #     Compute the payoff for the part and set it on the remote.
+    #     The remote stores it and creates the corresponding text for display
+    #     (if asked)
+    #     :return:
+    #     """
+    #     logger.debug(u"{} Part Payoff".format(self.joueur))
+    #
+    #     self.CVQ_gain_ecus = self.currentperiod.CVQ_cumulativepayoff
+    #     self.CVQ_gain_euros = float(self.CVQ_gain_ecus) * float(pms.TAUX_CONVERSION)
+    #     yield (self.remote.callRemote(
+    #         "set_payoffs", self.CVQ_gain_euros, self.CVQ_gain_ecus))
+    #
+    #     logger.info(u'{} Payoff ecus {} Payoff euros {:.2f}'.format(
+    #         self.joueur, self.CVQ_gain_ecus, self.CVQ_gain_euros))
 
 
 class RepetitionsCVQ(Base):
@@ -129,19 +129,19 @@ class RepetitionsCVQ(Base):
         ForeignKey("partie_CoopVoixQuest.partie_id"))
 
     CVQ_period = Column(Integer)
-    CVQ_treatment = Column(Integer)
-    CVQ_group = Column(Integer)
-    CVQ_decision = Column(Integer)
+    # CVQ_treatment = Column(Integer)
+    # CVQ_group = Column(Integer)
+    # CVQ_decision = Column(Integer)
     CVQ_decisiontime = Column(Integer)
-    CVQ_periodpayoff = Column(Float)
-    CVQ_cumulativepayoff = Column(Float)
+    # CVQ_periodpayoff = Column(Float)
+    # CVQ_cumulativepayoff = Column(Float)
 
     def __init__(self, period):
-        self.CVQ_treatment = pms.TREATMENT
-        self.CVQ_period = period
+        # self.CVQ_treatment = pms.TREATMENT
+        # self.CVQ_period = period
         self.CVQ_decisiontime = 0
-        self.CVQ_periodpayoff = 0
-        self.CVQ_cumulativepayoff = 0
+        # self.CVQ_periodpayoff = 0
+        # self.CVQ_cumulativepayoff = 0
 
     def todict(self, joueur=None):
         temp = {c.name: getattr(self, c.name) for c in self.__table__.columns}

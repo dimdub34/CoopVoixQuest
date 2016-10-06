@@ -21,10 +21,10 @@ class RemoteCVQ(IRemote):
     """
     def __init__(self, le2mclt):
         IRemote.__init__(self, le2mclt)
-        self._histo_vars = [
-            "CVQ_period", "CVQ_decision",
-            "CVQ_periodpayoff", "CVQ_cumulativepayoff"]
-        self._histo.append(texts_CVQ.get_histo_head())
+        # self._histo_vars = [
+        #     "CVQ_period", "CVQ_decision",
+        #     "CVQ_periodpayoff", "CVQ_cumulativepayoff"]
+        # self._histo.append(texts_CVQ.get_histo_head())
 
     def remote_configure(self, params):
         """
@@ -55,36 +55,32 @@ class RemoteCVQ(IRemote):
         """
         logger.info(u"{} Decision".format(self._le2mclt.uid))
         if self._le2mclt.simulation:
-            decision = \
-                random.randrange(
-                    pms.DECISION_MIN,
-                    pms.DECISION_MAX + pms.DECISION_STEP,
-                    pms.DECISION_STEP)
-            logger.info(u"{} Send back {}".format(self._le2mclt.uid, decision))
-            return decision
+            answers = {}
+            logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
+            return answers
         else: 
             defered = defer.Deferred()
             ecran_decision = GuiDecision(
                 defered, self._le2mclt.automatique,
-                self._le2mclt.screen, self.currentperiod, self.histo)
+                self._le2mclt.screen)
             ecran_decision.show()
             return defered
 
-    def remote_display_summary(self, period_content):
-        """
-        Display the summary screen
-        :param period_content: dictionary with the content of the current period
-        :return: deferred
-        """
-        logger.info(u"{} Summary".format(self._le2mclt.uid))
-        self.histo.append([period_content.get(k) for k in self._histo_vars])
-        if self._le2mclt.simulation:
-            return 1
-        else:
-            defered = defer.Deferred()
-            ecran_recap = GuiRecapitulatif(
-                defered, self._le2mclt.automatique, self._le2mclt.screen,
-                self.currentperiod, self.histo,
-                texts_CVQ.get_text_summary(period_content))
-            ecran_recap.show()
-            return defered
+    # def remote_display_summary(self, period_content):
+    #     """
+    #     Display the summary screen
+    #     :param period_content: dictionary with the content of the current period
+    #     :return: deferred
+    #     """
+    #     logger.info(u"{} Summary".format(self._le2mclt.uid))
+    #     self.histo.append([period_content.get(k) for k in self._histo_vars])
+    #     if self._le2mclt.simulation:
+    #         return 1
+    #     else:
+    #         defered = defer.Deferred()
+    #         ecran_recap = GuiRecapitulatif(
+    #             defered, self._le2mclt.automatique, self._le2mclt.screen,
+    #             self.currentperiod, self.histo,
+    #             texts_CVQ.get_text_summary(period_content))
+    #         ecran_recap.show()
+    #         return defered
