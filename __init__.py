@@ -1,0 +1,1 @@
+import CoopVoixQuestPart  # for sqlalchemy
