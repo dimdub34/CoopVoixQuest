@@ -10,12 +10,18 @@ which means that you should ask to the developer ;-)
 
 # variables --------------------------------------------------------------------
 # TREATMENTS = {0: "baseline"}
+COUPLE_LISTE = [u"Moins d'un an", u'1 an', u'2 ans', u'3 ans', u'4 ans',
+                u'5 ans', u'6 ans', u'7 ans', u'8 ans', u'9 ans', u'10 ans',
+                u'11 ans', u'12 ans', u'13 ans', u'14 ans', u'15 ans',
+                u'Plus de 15 ans']
+
 
 # parameters -------------------------------------------------------------------
 # TREATMENT = 0
 # TAUX_CONVERSION = 1
 NOMBRE_PERIODES = 0
 TAILLE_GROUPES = 0
+
 # GROUPES_CHAQUE_PERIODE = False
 # MONNAIE = u"ecu"
 #
