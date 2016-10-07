@@ -43,7 +43,7 @@ class GuiDecision(QtGui.QDialog):
         gridlayout = QtGui.QGridLayout()
         layout.addLayout(gridlayout)
 
-        # naissance
+        # naissance ============================================================
         gridlayout.addWidget(QtGui.QLabel(u"Votre mois de naissance"), 0, 0)
         self._combo_naissance_mois = QtGui.QComboBox()
         self._combo_naissance_mois.addItems(
@@ -61,7 +61,7 @@ class GuiDecision(QtGui.QDialog):
         self._spin_naissance_annee.setButtonSymbols(QtGui.QSpinBox.NoButtons)
         gridlayout.addWidget(self._spin_naissance_annee, 0, 3)
 
-        # parents
+        # parents ==============================================================
         gridlayout.addWidget(QtGui.QLabel(u"Année de naissance de votre père"), 1, 0)
         self._spin_naissance_annee_pere = QtGui.QSpinBox()
         self._spin_naissance_annee_pere.setMinimum(today_year - 100)
@@ -79,6 +79,58 @@ class GuiDecision(QtGui.QDialog):
         self._spin_naissance_annee_mere.setValue(today_year)
         self._spin_naissance_annee_mere.setButtonSymbols(QtGui.QSpinBox.NoButtons)
         gridlayout.addWidget(self._spin_naissance_annee_mere, 1, 3)
+
+        # situation maritale ===================================================
+        gridlayout.addWidget(QtGui.QLabel(u"Etes-vous en couple?"), 2, 0)
+        self._radio_couple_oui = QtGui.QRadioButton(u"oui")
+        self._radio_couple_non = QtGui.QRadioButton(u"non")
+        self._radio_couple_group = QtGui.QButtonGroup()
+        self._radio_couple_group.addButton(self._radio_couple_oui)
+        self._radio_couple_group.addButton(self._radio_couple_non)
+        self._layout_couple = QtGui.QHBoxLayout()
+        self._layout_couple.addWidget(self._radio_couple_oui)
+        self._layout_couple.addWidget(self._radio_couple_non)
+        gridlayout.addLayout(self._layout_couple, 2, 1)
+
+        gridlayout.addWidget(QtGui.QLabel(u"Depuis combien de temps?"), 2, 2)
+        self._combo_couple = QtGui.QComboBox()
+        self._combo_couple.addItems(pms.COUPLE_LISTE)
+        gridlayout.addWidget(self._combo_couple, 2, 3)
+
+        gridlayout.addWidget(QtGui.QLabel(u"Année de naissance de votre partenaire"), 2, 4)
+        self._spin_couple_partenaire_naissance = QtGui.QSpinBox()
+        self._spin_couple_partenaire_naissance.setMinimum(today_year - 100)
+        self._spin_couple_partenaire_naissance.setMaximum(today_year)
+        self._spin_couple_partenaire_naissance.setSingleStep(1)
+        self._spin_couple_partenaire_naissance.setValue(today_year)
+        self._spin_couple_partenaire_naissance.setButtonSymbols(QtGui.QSpinBox.NoButtons)
+        gridlayout.addWidget(self._spin_couple_partenaire_naissance, 2, 5)
+
+        self._combo_couple.setEnabled(False)
+        self._spin_couple_partenaire_naissance.setEnabled(False)
+        self._radio_couple_group.buttonClicked.connect(self._enable_couple)
+
+        gridlayout.addWidget(QtGui.QLabel(
+            u"Combien de partenaires sexuels du sexe opposé avez-vous eu au "
+            u"cours de toute votre vie?"), 3, 0, 1, 3)
+        self._spin_couple_partenaire_hetero = QtGui.QSpinBox()
+        self._spin_couple_partenaire_hetero.setMinimum(0)
+        self._spin_couple_partenaire_hetero.setMaximum(100)
+        self._spin_couple_partenaire_hetero.setSingleStep(1)
+        self._spin_couple_partenaire_hetero.setValue(0)
+        self._spin_couple_partenaire_hetero.setButtonSymbols(QtGui.QSpinBox.NoButtons)
+        gridlayout.addWidget(self._spin_couple_partenaire_hetero, 3, 3)
+
+        gridlayout.addWidget(QtGui.QLabel(
+            u"Combien de partenaires sexuels du même sexe avez-vous eu au "
+            u"cours de toute votre vie?"), 4, 0, 1, 3)
+        self._spin_couple_partenaire_homo = QtGui.QSpinBox()
+        self._spin_couple_partenaire_homo.setMinimum(0)
+        self._spin_couple_partenaire_homo.setMaximum(100)
+        self._spin_couple_partenaire_homo.setSingleStep(1)
+        self._spin_couple_partenaire_homo.setValue(0)
+        self._spin_couple_partenaire_homo.setButtonSymbols(QtGui.QSpinBox.NoButtons)
+        gridlayout.addWidget(self._spin_couple_partenaire_homo, 4, 3)
 
         # self._wdecision = WSpinbox(
         #     label=trans_CVQ(u"label decision"),
@@ -100,6 +152,15 @@ class GuiDecision(QtGui.QDialog):
             self._timer_automatique.timeout.connect(
                 buttons.button(QtGui.QDialogButtonBox.Ok).click)
             self._timer_automatique.start(7000)
+
+    def _enable_couple(self):
+        if self._radio_couple_oui.isChecked():
+            self._combo_couple.setEnabled(True)
+            self._spin_couple_partenaire_naissance.setEnabled(True)
+        else:
+            self._combo_couple.setEnabled(False)
+            self._spin_couple_partenaire_naissance.setEnabled(False)
+
                 
     def reject(self):
         pass
