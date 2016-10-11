@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from datetime import datetime
 from twisted.internet import defer
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey
 from server.servbase import Base
 from server.servparties import Partie
 from util.utiltools import get_module_attributes
@@ -84,6 +83,19 @@ class RepetitionsCVQ(Base):
     CVQ_couple = Column(Integer)
     CVQ_couple_temps = Column(Integer)
     CVQ_couple_partenaire_naissance = Column(Integer)
+    CVQ_partenaires_heteros = Column(Integer)
+    CVQ_partenaires_homos = Column(Integer)
+    CVQ_etudes = Column(Integer)
+    CVQ_proprietaire = Column(Integer)
+    CVQ_revenu = Column(Integer)
+    CVQ_csp = Column(Integer)
+    CVQ_fumeur = Column(Integer)
+    CVQ_lever = Column(String)
+    CVQ_sommeil = Column(String)
+    CVQ_medicaments = Column(Integer)
+    CVQ_medicaments_noms = Column(String)
+    CVQ_chant = Column(Integer)
+    CVQ_theatre = Column(Integer)
 
 
     # coop

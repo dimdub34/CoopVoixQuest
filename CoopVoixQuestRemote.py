@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import random
+from random import randint
 
 from twisted.internet import defer
 from client.cltremote import IRemote
@@ -53,7 +53,32 @@ class RemoteCVQ(IRemote):
         """
         logger.info(u"{} quest. demo".format(self._le2mclt.uid))
         if self._le2mclt.simulation:
+            # démo -------------------------------------------------------------
             answers = {}
+            answers["CVQ_naissance_mois"] = randint(1, 12)
+            answers["CVQ_naissance_annee"] = randint(1975, 2000)
+            answers["CVQ_naissance_pays"] = randint(1, 182)
+            answers["CVQ_naissance_pere"] = randint(1940, 1965)
+            answers["CVQ_naissance_mere"] = randint(1940, 1965)
+            answers["CVQ_couple"] = randint(0, 1)
+            if answers["CVQ_couple"] == 1:
+                answers["CVQ_couple_temps"] = randint(1, 16)
+                answers["CVQ_couple_partenaire_naissance"] = randint(1975, 2000)
+            answers["CVQ_partenaires_heteros"] = randint(0, 15)
+            answers["CVQ_partenaires_homos"] = randint(0, 15)
+            answers["CVQ_etudes"] = randint(1, 8)
+            answers["CVQ_proprietaire"] = randint(0, 1)
+            answers["CVQ_revenu"] = randint(0, 7)
+            answers["CVQ_csp"] = randint(0, 6)
+            answers["CVQ_fumeur"] = randint(0, 1)
+            answers["CVQ_lever"] = "0{}:00".format(randint(6, 8))
+            answers["CVQ_sommeil"] = "0{}:00".format(randint(6, 9))
+            answers["CVQ_medicaments"] = randint(0, 1)
+            if answers["CVQ_medicaments"] == 1:
+                answers["CVQ_medicaments_noms"] = u"aspirine"
+            answers["CVQ_chant"] = randint(0, 1)
+            answers["CVQ_theatre"] = randint(0, 1)
+
             logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
             return answers
         else: 

@@ -6,7 +6,7 @@ This module contains the GUI
 import logging
 from PyQt4 import QtGui, QtCore
 from util.utili18n import le2mtrans
-from datetime import datetime
+from datetime import datetime, time
 from random import randint
 import CoopVoixQuestParams as pms
 from CoopVoixQuestTexts import trans_CVQ
@@ -347,7 +347,54 @@ class GuiDemo(QtGui.QDialog):
                 if self._spin_couple_partenaire_naissance.value() == self._current_year:
                     raise ValueError(u"Vous devez préciser l'année de naissance "
                                      u"de votre partenaire")
-                answers["CVQ_couple_partenaire_naissance"] = self._spin_couple_partenaire_naissance.value()
+                answers["CVQ_couple_partenaire_naissance"] = \
+                    self._spin_couple_partenaire_naissance.value()
+            answers["CVQ_partenaires_heteros"] = self._spin_couple_partenaire_hetero.value()
+            answers["CVQ_partenaires_homos"] = self._spin_couple_partenaire_homo.value()
+
+            # statut socio-éco -------------------------------------------------
+            if self._combo_etudes.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser votre niveau d'études")
+            answers["CVQ_etudes"] = self._combo_etudes.currentIndex()
+            if self._radio_logement_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous êtes propriétaire")
+            answers["CVQ_proprietaire"] = self._radio_logement_group.checkedId()
+            if self._combo_revenu.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser votre revenu")
+            answers["CVQ_revenu"] = self._combo_revenu.currentIndex()
+            if self._combo_csp.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser votre CSP")
+            answers["CVQ_csp"] = self._combo_csp.currentIndex()
+            if self._radio_fumeur_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous fumez")
+            answers["CVQ_fumeur"] = self._radio_fumeur_group.checkedId()
+            heure_lever = self._timeedit_lever.time().toString("hh:mm")
+            if heure_lever == "00:00":
+                raise ValueError(u"Vous devez préciser votre heure de lever")
+            answers["CVQ_lever"] = heure_lever
+            sommeil = self._timeedit_sommeil.time().toString("hh:mm")
+            if sommeil == "00:00":
+                raise ValueError(u"Vous devez préciser votre nombre d'heures "
+                                 u"de sommeil")
+            answers["CVQ_sommeil"] = sommeil
+            if self._radio_medicaments_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous prenez des "
+                                 u"médicaments")
+            answers["CVQ_medicaments"] = self._radio_medicaments_group.checkedId()
+            if answers["CVQ_medicaments"] == 1:
+                medocs = unicode(self._lineedit_medicaments.text().toUtf8(), "utf8")
+                if not medocs:
+                    raise ValueError(u"Vous devez préciser les noms de vos "
+                                     u"médicaments")
+                answers["CVQ_medicaments_noms"] = medocs
+            if self._radio_chant_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous pratiquez "
+                                 u"le chant")
+            answers["CVQ_chant"] = self._radio_chant_group.checkedId()
+            if self._radio_theatre_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous faites du "
+                                 u"théâtre")
+            answers["CVQ_theatre"] = self._radio_theatre_group.checkedId()
 
 
         except ValueError as e:
