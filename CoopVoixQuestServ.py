@@ -104,5 +104,3 @@ class Serveur(object):
             u'Ok {}'.format("CoopVoixQuest").upper(), fg="white", bg="blue")
         self._le2mserv.gestionnaire_graphique.infoserv(
             u'Ok {}'.format("CoopVoixQuest").upper(), fg="white", bg="blue")
-        yield (self._le2mserv.gestionnaire_experience.finalize_part(
-            "CoopVoixQuest"))

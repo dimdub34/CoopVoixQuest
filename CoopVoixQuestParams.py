@@ -10,11 +10,25 @@ which means that you should ask to the developer ;-)
 
 # variables --------------------------------------------------------------------
 # TREATMENTS = {0: "baseline"}
-COUPLE_LISTE = [u"Moins d'un an", u'1 an', u'2 ans', u'3 ans', u'4 ans',
+COUPLE_LISTE = [u"Choisir", u"Moins d'un an", u'1 an', u'2 ans', u'3 ans', u'4 ans',
                 u'5 ans', u'6 ans', u'7 ans', u'8 ans', u'9 ans', u'10 ans',
                 u'11 ans', u'12 ans', u'13 ans', u'14 ans', u'15 ans',
                 u'Plus de 15 ans']
 
+ANNEES_ETUDES = [u"Choisir", u"Troisième", u"Seconde", u"Première", u"Terminale",
+                 u"Bac", u"Bac+1", u"Bac+2", u"Bac+3", u"Bac+4", u"Bac+5",
+                 u"Bac+8"]
+
+CSP = [u"Choisir", u"Agriculteurs exploitants",
+       u"Artisans, commerçants et chefs d'entreprise",
+       u"Cadres et professions intellectuelles supérieures",
+       u"Professions Intermédiaires", u"Employés", u"Ouvriers", u"Retraités",
+       u"Autres personnes sans activité professionnelle", u"Etudiant"]
+
+REVENUS = [u"Choisir", u"Moins de 200€", u"De 200 à 500€", u"De 500 à 950€",
+           u"De 950 à 1200€", u"De 1200 à 1465€", u"De 1465 à 1745€",
+           u"De 1745 à 2050€", u"De 2050 à 2385€", u"De 2385 à 2764€",
+           u"De 2764 à 3280€", u"Plus de 3208€"]
 
 # parameters -------------------------------------------------------------------
 # TREATMENT = 0

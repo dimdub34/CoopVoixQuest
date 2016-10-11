@@ -50,75 +50,20 @@ class PartieCVQ(Partie):
 
     @defer.inlineCallbacks
     def display_decision(self):
-        """
-        Display the decision screen on the remote
-        Get back the decision
-        :return:
-        """
         logger.debug(u"{} Decision".format(self.joueur))
-        debut = datetime.now()
-        self.currentperiod.CVQ_decision = yield(self.remote.callRemote(
-            "display_decision"))
-        self.currentperiod.CVQ_decisiontime = (datetime.now() - debut).seconds
-        self.joueur.info(u"{}".format(self.currentperiod.CVQ_decision))
+        answers_demo = yield(self.remote.callRemote("display_demo"))
+        for k, v in answers_demo.viewitems():
+            setattr(self.currentperiod, k, v)
+        self.joueur.info(u"Ok quest. démo")
+        answers_coop = yield(self.remote.callRemote("display_coop"))
+        for k, v in answers_coop.viewitems():
+            setattr(self.currentperiod, k, v)
+        self.joueur.info(u"Ok quest. coop")
+        answers_bigfive = yield(self.remote.callRemote("display_bigfive"))
+        for k, v in answers_bigfive.viewitems():
+            setattr(self.currentperiod, k, v)
+        self.joueur.info(u"Ok quest. bigfive")
         self.joueur.remove_waitmode()
-
-    # def compute_periodpayoff(self):
-    #     """
-    #     Compute the payoff for the period
-    #     :return:
-    #     """
-    #     logger.debug(u"{} Period Payoff".format(self.joueur))
-    #     self.currentperiod.CVQ_periodpayoff = 0
-    #
-    #     # cumulative payoff since the first period
-    #     if self.currentperiod.CVQ_period < 2:
-    #         self.currentperiod.CVQ_cumulativepayoff = \
-    #             self.currentperiod.CVQ_periodpayoff
-    #     else:
-    #         previousperiod = self.periods[self.currentperiod.CVQ_period - 1]
-    #         self.currentperiod.CVQ_cumulativepayoff = \
-    #             previousperiod.CVQ_cumulativepayoff + \
-    #             self.currentperiod.CVQ_periodpayoff
-    #
-    #     # we store the period in the self.periodes dictionnary
-    #     self.periods[self.currentperiod.CVQ_period] = self.currentperiod
-    #
-    #     logger.debug(u"{} Period Payoff {}".format(
-    #         self.joueur,
-    #         self.currentperiod.CVQ_periodpayoff))
-    #
-    # @defer.inlineCallbacks
-    # def display_summary(self, *args):
-    #     """
-    #     Send a dictionary with the period content values to the remote.
-    #     The remote creates the text and the history
-    #     :param args:
-    #     :return:
-    #     """
-    #     logger.debug(u"{} Summary".format(self.joueur))
-    #     yield(self.remote.callRemote(
-    #         "display_summary", self.currentperiod.todict()))
-    #     self.joueur.info("Ok")
-    #     self.joueur.remove_waitmode()
-    #
-    # @defer.inlineCallbacks
-    # def compute_partpayoff(self):
-    #     """
-    #     Compute the payoff for the part and set it on the remote.
-    #     The remote stores it and creates the corresponding text for display
-    #     (if asked)
-    #     :return:
-    #     """
-    #     logger.debug(u"{} Part Payoff".format(self.joueur))
-    #
-    #     self.CVQ_gain_ecus = self.currentperiod.CVQ_cumulativepayoff
-    #     self.CVQ_gain_euros = float(self.CVQ_gain_ecus) * float(pms.TAUX_CONVERSION)
-    #     yield (self.remote.callRemote(
-    #         "set_payoffs", self.CVQ_gain_euros, self.CVQ_gain_ecus))
-    #
-    #     logger.info(u'{} Payoff ecus {} Payoff euros {:.2f}'.format(
-    #         self.joueur, self.CVQ_gain_ecus, self.CVQ_gain_euros))
 
 
 class RepetitionsCVQ(Base):
@@ -129,19 +74,25 @@ class RepetitionsCVQ(Base):
         ForeignKey("partie_CoopVoixQuest.partie_id"))
 
     CVQ_period = Column(Integer)
-    # CVQ_treatment = Column(Integer)
-    # CVQ_group = Column(Integer)
-    # CVQ_decision = Column(Integer)
-    CVQ_decisiontime = Column(Integer)
-    # CVQ_periodpayoff = Column(Float)
-    # CVQ_cumulativepayoff = Column(Float)
+
+    # demo
+    CVQ_naissance_mois = Column(Integer)
+    CVQ_naissance_annee = Column(Integer)
+    CVQ_naissance_pays = Column(Integer)
+    CVQ_naissance_pere = Column(Integer)
+    CVQ_naissance_mere = Column(Integer)
+    CVQ_couple = Column(Integer)
+    CVQ_couple_temps = Column(Integer)
+    CVQ_couple_partenaire_naissance = Column(Integer)
+
+
+    # coop
+
+    # big five
 
     def __init__(self, period):
-        # self.CVQ_treatment = pms.TREATMENT
-        # self.CVQ_period = period
-        self.CVQ_decisiontime = 0
-        # self.CVQ_periodpayoff = 0
-        # self.CVQ_cumulativepayoff = 0
+        self.CVQ_period = period
+
 
     def todict(self, joueur=None):
         temp = {c.name: getattr(self, c.name) for c in self.__table__.columns}

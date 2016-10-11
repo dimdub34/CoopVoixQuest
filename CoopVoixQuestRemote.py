@@ -4,11 +4,9 @@ import logging
 import random
 
 from twisted.internet import defer
-from twisted.spread import pb
 from client.cltremote import IRemote
-from client.cltgui.cltguidialogs import GuiRecapitulatif
 import CoopVoixQuestParams as pms
-from CoopVoixQuestGui import GuiDecision
+from CoopVoixQuestGui import GuiDemo
 import CoopVoixQuestTexts as texts_CVQ
 
 
@@ -48,39 +46,59 @@ class RemoteCVQ(IRemote):
             del self.histo[1:]
 
 
-    def remote_display_decision(self):
+    def remote_display_demo(self):
         """
         Display the decision screen
         :return: deferred
         """
-        logger.info(u"{} Decision".format(self._le2mclt.uid))
+        logger.info(u"{} quest. demo".format(self._le2mclt.uid))
         if self._le2mclt.simulation:
             answers = {}
             logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
             return answers
         else: 
             defered = defer.Deferred()
-            ecran_decision = GuiDecision(
+            ecran_demo = GuiDemo(
                 defered, self._le2mclt.automatique,
                 self._le2mclt.screen)
-            ecran_decision.show()
+            ecran_demo.show()
             return defered
 
-    # def remote_display_summary(self, period_content):
-    #     """
-    #     Display the summary screen
-    #     :param period_content: dictionary with the content of the current period
-    #     :return: deferred
-    #     """
-    #     logger.info(u"{} Summary".format(self._le2mclt.uid))
-    #     self.histo.append([period_content.get(k) for k in self._histo_vars])
-    #     if self._le2mclt.simulation:
-    #         return 1
-    #     else:
-    #         defered = defer.Deferred()
-    #         ecran_recap = GuiRecapitulatif(
-    #             defered, self._le2mclt.automatique, self._le2mclt.screen,
-    #             self.currentperiod, self.histo,
-    #             texts_CVQ.get_text_summary(period_content))
-    #         ecran_recap.show()
-    #         return defered
+
+    def remote_display_coop(self):
+        """
+        Display the decision screen
+        :return: deferred
+        """
+        logger.info(u"{} quest. coop".format(self._le2mclt.uid))
+        if self._le2mclt.simulation:
+            answers = {}
+            logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
+            return answers
+        else:
+            defered = defer.Deferred()
+            ecran_demo = GuiDemo(
+                defered, self._le2mclt.automatique,
+                self._le2mclt.screen)
+            ecran_demo.show()
+            return defered
+
+    def remote_display_bigfive(self):
+        """
+        Display the decision screen
+        :return: deferred
+        """
+        logger.info(u"{} quest. bigfive".format(self._le2mclt.uid))
+        if self._le2mclt.simulation:
+            answers = {}
+            logger.info(
+                u"{} Send back {}".format(self._le2mclt.uid, answers))
+            return answers
+        else:
+            defered = defer.Deferred()
+            ecran_demo = GuiDemo(
+                defered, self._le2mclt.automatique,
+                self._le2mclt.screen)
+            ecran_demo.show()
+            return defered
+

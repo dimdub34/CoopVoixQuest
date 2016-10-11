@@ -7,138 +7,274 @@ import logging
 from PyQt4 import QtGui, QtCore
 from util.utili18n import le2mtrans
 from datetime import datetime
+from random import randint
 import CoopVoixQuestParams as pms
 from CoopVoixQuestTexts import trans_CVQ
 import CoopVoixQuestTexts as texts_CVQ
-from client.cltgui.cltguidialogs import GuiHistorique
-from client.cltgui.cltguiwidgets import WPeriod, WExplication, WSpinbox
+from client.cltgui.cltguiwidgets import WExplication
+from configuration.configvar import COUNTRIES
 
 
 logger = logging.getLogger("le2m")
 
 
-class GuiDecision(QtGui.QDialog):
-    # def __init__(self, defered, automatique, parent, period, historique):
+class MyHline(QtGui.QFrame):
+    def __init__(self):
+        QtGui.QFrame.__init__(self)
+        self.setFrameShape(QtGui.QFrame.HLine)
+        self.setFrameShadow(QtGui.QFrame.Sunken)
+
+
+class MyLabel(QtGui.QLabel):
+    def __init__(self, text):
+        QtGui.QLabel.__init__(self, text)
+        self.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+
+
+class MyHBoxLayout(QtGui.QHBoxLayout):
+    def __init__(self, widgets_to_add):
+        QtGui.QHBoxLayout.__init__(self)
+        for e in widgets_to_add:
+            self.addWidget(e)
+        self.addSpacerItem(
+            QtGui.QSpacerItem(20, 5, QtGui.QSizePolicy.Expanding,
+                              QtGui.QSizePolicy.Minimum))
+
+
+class GuiDemo(QtGui.QDialog):
     def __init__(self, defered, automatique, parent):
 
-        super(GuiDecision, self).__init__(parent)
+        super(GuiDemo, self).__init__(parent)
 
-        # variables
         self._defered = defered
         self._automatique = automatique
-        # self._historique = GuiHistorique(self, historique)
 
         layout = QtGui.QVBoxLayout(self)
 
-        # should be removed if one-shot game
-        # wperiod = WPeriod(
-        #     period=period, ecran_historique=self._historique)
-        # layout.addWidget(wperiod)
-
         wexplanation = WExplication(
-            text=texts_CVQ.get_text_explanation(),
+            text=texts_CVQ.get_text_explanation_demo(),
             size=(450, 80), parent=self)
         layout.addWidget(wexplanation)
 
         gridlayout = QtGui.QGridLayout()
+        gridlayout.setHorizontalSpacing(20)
         layout.addLayout(gridlayout)
 
+        CURRENT_LINE = 0
+        self._current_year = datetime.now().year
+
         # naissance ============================================================
-        gridlayout.addWidget(QtGui.QLabel(u"Votre mois de naissance"), 0, 0)
+        gridlayout.addWidget(MyLabel(u"Votre mois de naissance"), CURRENT_LINE, 0)
         self._combo_naissance_mois = QtGui.QComboBox()
         self._combo_naissance_mois.addItems(
             [u"Choisir", u"janvier", u"février", u"mars", u"avril", u"mai",
              u"juin", u"juillet", u"août", u"septembre", u"octobre",
              u"novembre", u"décembre"])
-        gridlayout.addWidget(self._combo_naissance_mois, 0, 1)
-        gridlayout.addWidget(QtGui.QLabel(u"Votre année de naissance"), 0, 2)
-        today_year = datetime.now().year
+        self._combo_naissance_mois.setMaximumWidth(100)
+        gridlayout.addWidget(self._combo_naissance_mois, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Votre année de naissance"), CURRENT_LINE, 2)
         self._spin_naissance_annee = QtGui.QSpinBox()
-        self._spin_naissance_annee.setMinimum(today_year - 100)
-        self._spin_naissance_annee.setMaximum(today_year)
+        self._spin_naissance_annee.setMinimum(self._current_year - 100)
+        self._spin_naissance_annee.setMaximum(self._current_year)
         self._spin_naissance_annee.setSingleStep(1)
-        self._spin_naissance_annee.setValue(today_year)
+        self._spin_naissance_annee.setValue(self._current_year)
         self._spin_naissance_annee.setButtonSymbols(QtGui.QSpinBox.NoButtons)
-        gridlayout.addWidget(self._spin_naissance_annee, 0, 3)
+        self._spin_naissance_annee.setMaximumWidth(60)
+        gridlayout.addWidget(self._spin_naissance_annee, CURRENT_LINE, 3)
+
+        gridlayout.addWidget(MyLabel(u"Pays de naissance"), CURRENT_LINE, 4)
+        pays = [u"Choisir"]
+        pays.extend(sorted(COUNTRIES.viewvalues()))
+        self._combo_naissance_pays = QtGui.QComboBox()
+        self._combo_naissance_pays.addItems(pays)
+        self._combo_naissance_pays.setMaximumWidth(100)
+        gridlayout.addWidget(self._combo_naissance_pays, CURRENT_LINE, 5)
+
+        CURRENT_LINE += 1
 
         # parents ==============================================================
-        gridlayout.addWidget(QtGui.QLabel(u"Année de naissance de votre père"), 1, 0)
+        gridlayout.addWidget(MyLabel(u"Année de naissance de votre père"), CURRENT_LINE, 0)
         self._spin_naissance_annee_pere = QtGui.QSpinBox()
-        self._spin_naissance_annee_pere.setMinimum(today_year - 100)
-        self._spin_naissance_annee_pere.setMaximum(today_year)
+        self._spin_naissance_annee_pere.setMinimum(self._current_year - 100)
+        self._spin_naissance_annee_pere.setMaximum(self._current_year)
         self._spin_naissance_annee_pere.setSingleStep(1)
-        self._spin_naissance_annee_pere.setValue(today_year)
+        self._spin_naissance_annee_pere.setValue(self._current_year)
         self._spin_naissance_annee_pere.setButtonSymbols(QtGui.QSpinBox.NoButtons)
-        gridlayout.addWidget(self._spin_naissance_annee_pere, 1, 1)
+        self._spin_naissance_annee_pere.setMaximumWidth(60)
+        gridlayout.addWidget(self._spin_naissance_annee_pere, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(QtGui.QLabel(u"Année de naissance de votre mère"), 1, 2)
+        gridlayout.addWidget(MyLabel(u"Année de naissance de votre mère"), CURRENT_LINE, 2)
         self._spin_naissance_annee_mere = QtGui.QSpinBox()
-        self._spin_naissance_annee_mere.setMinimum(today_year - 100)
-        self._spin_naissance_annee_mere.setMaximum(today_year)
+        self._spin_naissance_annee_mere.setMinimum(self._current_year - 100)
+        self._spin_naissance_annee_mere.setMaximum(self._current_year)
         self._spin_naissance_annee_mere.setSingleStep(1)
-        self._spin_naissance_annee_mere.setValue(today_year)
+        self._spin_naissance_annee_mere.setValue(self._current_year)
         self._spin_naissance_annee_mere.setButtonSymbols(QtGui.QSpinBox.NoButtons)
-        gridlayout.addWidget(self._spin_naissance_annee_mere, 1, 3)
+        self._spin_naissance_annee_mere.setMaximumWidth(60)
+        gridlayout.addWidget(self._spin_naissance_annee_mere, CURRENT_LINE, 3)
+
+        CURRENT_LINE += 1
 
         # situation maritale ===================================================
-        gridlayout.addWidget(QtGui.QLabel(u"Etes-vous en couple?"), 2, 0)
+        gridlayout.addWidget(MyLabel(u"Etes-vous en couple?"), CURRENT_LINE, 0)
         self._radio_couple_oui = QtGui.QRadioButton(u"oui")
         self._radio_couple_non = QtGui.QRadioButton(u"non")
         self._radio_couple_group = QtGui.QButtonGroup()
-        self._radio_couple_group.addButton(self._radio_couple_oui)
-        self._radio_couple_group.addButton(self._radio_couple_non)
-        self._layout_couple = QtGui.QHBoxLayout()
-        self._layout_couple.addWidget(self._radio_couple_oui)
-        self._layout_couple.addWidget(self._radio_couple_non)
-        gridlayout.addLayout(self._layout_couple, 2, 1)
+        self._radio_couple_group.addButton(self._radio_couple_oui, 1)
+        self._radio_couple_group.addButton(self._radio_couple_non, 0)
+        self._layout_couple = MyHBoxLayout(
+            [self._radio_couple_oui, self._radio_couple_non])
+        gridlayout.addLayout(self._layout_couple, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(QtGui.QLabel(u"Depuis combien de temps?"), 2, 2)
+        gridlayout.addWidget(MyLabel(u"Depuis combien de temps?"), CURRENT_LINE, 2)
         self._combo_couple = QtGui.QComboBox()
         self._combo_couple.addItems(pms.COUPLE_LISTE)
-        gridlayout.addWidget(self._combo_couple, 2, 3)
+        self._combo_couple.setMaximumWidth(100)
+        gridlayout.addWidget(self._combo_couple, CURRENT_LINE, 3)
 
-        gridlayout.addWidget(QtGui.QLabel(u"Année de naissance de votre partenaire"), 2, 4)
+        gridlayout.addWidget(MyLabel(u"Année de naissance de votre partenaire"), CURRENT_LINE, 4)
         self._spin_couple_partenaire_naissance = QtGui.QSpinBox()
-        self._spin_couple_partenaire_naissance.setMinimum(today_year - 100)
-        self._spin_couple_partenaire_naissance.setMaximum(today_year)
+        self._spin_couple_partenaire_naissance.setMinimum(self._current_year - 100)
+        self._spin_couple_partenaire_naissance.setMaximum(self._current_year)
         self._spin_couple_partenaire_naissance.setSingleStep(1)
-        self._spin_couple_partenaire_naissance.setValue(today_year)
+        self._spin_couple_partenaire_naissance.setValue(self._current_year)
         self._spin_couple_partenaire_naissance.setButtonSymbols(QtGui.QSpinBox.NoButtons)
-        gridlayout.addWidget(self._spin_couple_partenaire_naissance, 2, 5)
+        self._spin_couple_partenaire_naissance.setMaximumWidth(60)
+        gridlayout.addWidget(self._spin_couple_partenaire_naissance, CURRENT_LINE, 5)
 
         self._combo_couple.setEnabled(False)
         self._spin_couple_partenaire_naissance.setEnabled(False)
         self._radio_couple_group.buttonClicked.connect(self._enable_couple)
 
-        gridlayout.addWidget(QtGui.QLabel(
-            u"Combien de partenaires sexuels du sexe opposé avez-vous eu au "
-            u"cours de toute votre vie?"), 3, 0, 1, 3)
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(
+            u"Combien de partenaires sexuels du sexe opposé<br />avez-vous eu au "
+            u"cours de toute votre vie?"), CURRENT_LINE, 0)
         self._spin_couple_partenaire_hetero = QtGui.QSpinBox()
         self._spin_couple_partenaire_hetero.setMinimum(0)
         self._spin_couple_partenaire_hetero.setMaximum(100)
         self._spin_couple_partenaire_hetero.setSingleStep(1)
         self._spin_couple_partenaire_hetero.setValue(0)
         self._spin_couple_partenaire_hetero.setButtonSymbols(QtGui.QSpinBox.NoButtons)
-        gridlayout.addWidget(self._spin_couple_partenaire_hetero, 3, 3)
+        self._spin_couple_partenaire_hetero.setMaximumWidth(60)
+        gridlayout.addWidget(self._spin_couple_partenaire_hetero, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(QtGui.QLabel(
-            u"Combien de partenaires sexuels du même sexe avez-vous eu au "
-            u"cours de toute votre vie?"), 4, 0, 1, 3)
+        gridlayout.addWidget(MyLabel(
+            u"Combien de partenaires sexuels du même sexe<br />avez-vous eu au "
+            u"cours de toute votre vie?"), CURRENT_LINE, 2)
         self._spin_couple_partenaire_homo = QtGui.QSpinBox()
         self._spin_couple_partenaire_homo.setMinimum(0)
         self._spin_couple_partenaire_homo.setMaximum(100)
         self._spin_couple_partenaire_homo.setSingleStep(1)
         self._spin_couple_partenaire_homo.setValue(0)
         self._spin_couple_partenaire_homo.setButtonSymbols(QtGui.QSpinBox.NoButtons)
-        gridlayout.addWidget(self._spin_couple_partenaire_homo, 4, 3)
+        self._spin_couple_partenaire_homo.setMaximumWidth(60)
+        gridlayout.addWidget(self._spin_couple_partenaire_homo, CURRENT_LINE, 3)
 
-        # self._wdecision = WSpinbox(
-        #     label=trans_CVQ(u"label decision"),
-        #     minimum=pms.DECISION_MIN, maximum=pms.DECISION_MAX,
-        #     interval=pms.DECISION_STEP, automatique=self._automatique,
-        #     parent=self)
-        # layout.addWidget(self._wdecision)
+        CURRENT_LINE += 1
 
+        # Statut socio-économique ==============================================
+        gridlayout.addWidget(MyLabel(u"Niveau d'études"), CURRENT_LINE, 0)
+        self._combo_etudes = QtGui.QComboBox()
+        self._combo_etudes.addItems(pms.ANNEES_ETUDES)
+        self._combo_etudes.setMaximumWidth(100)
+        gridlayout.addWidget(self._combo_etudes, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Etes-vous propriétaire de votre logement?"), CURRENT_LINE, 2)
+        self._radio_logement_oui = QtGui.QRadioButton(u"oui")
+        self._radio_logement_non = QtGui.QRadioButton(u"non")
+        self._radio_logement_group = QtGui.QButtonGroup()
+        self._radio_logement_group.addButton(self._radio_logement_oui, 1)
+        self._radio_logement_group.addButton(self._radio_logement_non, 0)
+        self._layout_logement = MyHBoxLayout(
+            [self._radio_logement_oui, self._radio_logement_non])
+        gridlayout.addLayout(self._layout_logement, CURRENT_LINE, 3)
+
+        gridlayout.addWidget(MyLabel(u"Revenus personnels mensuels nets"), CURRENT_LINE, 4)
+        self._combo_revenu = QtGui.QComboBox()
+        self._combo_revenu.addItems(pms.REVENUS)
+        self._combo_revenu.setMaximumWidth(100)
+        gridlayout.addWidget(self._combo_revenu, CURRENT_LINE, 5)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Catégorie socio-professionnelle"), CURRENT_LINE, 0)
+        self._combo_csp = QtGui.QComboBox()
+        self._combo_csp.addItems(pms.CSP)
+        self._combo_csp.setMaximumWidth(100)
+        gridlayout.addWidget(self._combo_csp, CURRENT_LINE, 1, 1, 2)
+
+        CURRENT_LINE += 1
+
+        # habitudes et sommeil =================================================
+        gridlayout.addWidget(MyLabel(u"Etes-vous fumeur?"), CURRENT_LINE, 0)
+        self._radio_fumeur_oui = QtGui.QRadioButton(u"oui")
+        self._radio_fumeur_non = QtGui.QRadioButton(u"non")
+        self._radio_fumeur_group = QtGui.QButtonGroup()
+        self._radio_fumeur_group.addButton(self._radio_fumeur_oui, 1)
+        self._radio_fumeur_group.addButton(self._radio_fumeur_non, 0)
+        self._layout_fumeur = MyHBoxLayout(
+            [self._radio_fumeur_oui, self._radio_fumeur_non])
+        gridlayout.addLayout(self._layout_fumeur, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Heure du lever"), CURRENT_LINE, 2)
+        self._timeedit_lever = QtGui.QTimeEdit()
+        self._timeedit_lever.setDisplayFormat("HH:mm")
+        self._timeedit_lever.setMaximumWidth(60)
+        gridlayout.addWidget(self._timeedit_lever, CURRENT_LINE, 3)
+
+        gridlayout.addWidget(MyLabel(u"Nombre d'heures de sommeil"), CURRENT_LINE, 4)
+        self._timeedit_sommeil = QtGui.QTimeEdit()
+        self._timeedit_sommeil.setDisplayFormat("HH:mm")
+        self._timeedit_sommeil.setMaximumWidth(60)
+        gridlayout.addWidget(self._timeedit_sommeil, CURRENT_LINE, 5)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Prenez-vous des médicaments"), CURRENT_LINE, 0)
+        self._radio_medicaments_oui = QtGui.QRadioButton(u"oui")
+        self._radio_medicaments_non = QtGui.QRadioButton(u"non")
+        self._radio_medicaments_group = QtGui.QButtonGroup()
+        self._radio_medicaments_group.addButton(self._radio_medicaments_oui, 1)
+        self._radio_medicaments_group.addButton(self._radio_medicaments_non, 0)
+        self._layout_medicaments = MyHBoxLayout(
+            [self._radio_medicaments_oui, self._radio_medicaments_non])
+        gridlayout.addLayout(self._layout_medicaments, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Lesquels"), CURRENT_LINE, 2)
+        self._lineedit_medicaments = QtGui.QLineEdit()
+        gridlayout.addWidget(self._lineedit_medicaments, CURRENT_LINE, 3)
+
+        self._lineedit_medicaments.setEnabled(False)
+        self._radio_medicaments_group.buttonClicked.connect(
+            lambda _: self._lineedit_medicaments.setEnabled(
+                self._radio_medicaments_oui.isChecked()))
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Pratiquez-vous le chant (chorale, cours ...)?"), CURRENT_LINE, 0)
+        self._radio_chant_oui = QtGui.QRadioButton(u"oui")
+        self._radio_chant_non = QtGui.QRadioButton(u"non")
+        self._radio_chant_group = QtGui.QButtonGroup()
+        self._radio_chant_group.addButton(self._radio_chant_oui, 1)
+        self._radio_chant_group.addButton(self._radio_chant_non, 0)
+        self._layout_chant = MyHBoxLayout(
+            [self._radio_chant_oui, self._radio_chant_non])
+        gridlayout.addLayout(self._layout_chant, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Faites-vous du théatre?"), CURRENT_LINE, 2)
+        self._radio_theatre_oui = QtGui.QRadioButton(u"oui")
+        self._radio_theatre_non = QtGui.QRadioButton(u"non")
+        self._radio_theatre_group = QtGui.QButtonGroup()
+        self._radio_theatre_group.addButton(self._radio_theatre_oui, 1)
+        self._radio_theatre_group.addButton(self._radio_theatre_non, 0)
+        self._layout_theatre = MyHBoxLayout(
+            [self._radio_theatre_oui, self._radio_theatre_non])
+        gridlayout.addLayout(self._layout_theatre, CURRENT_LINE, 3)
+
+        # buttons
         buttons = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok)
         buttons.accepted.connect(self._accept)
         layout.addWidget(buttons)
@@ -148,20 +284,28 @@ class GuiDecision(QtGui.QDialog):
         self.setFixedSize(self.size())
 
         if self._automatique:
+            for k, v in self.__dict__.viewitems():
+                if "combo" in k:
+                    v.setCurrentIndex(randint(1, v.count()-1))
+                elif "spin" in k:
+                    v.setValue(randint(v.minimum(), v.maximum()))
+                elif "group" in k:
+                    v.button(randint(0, 1)).click()
+                elif "lineedit" in k:
+                    v.setText(u"Texte automatique")
+                elif "timeedit" in k:
+                    v.setTime(QtCore.QTime(randint(0, 23), randint(0, 59)))
+
             self._timer_automatique = QtCore.QTimer()
             self._timer_automatique.timeout.connect(
                 buttons.button(QtGui.QDialogButtonBox.Ok).click)
             self._timer_automatique.start(7000)
 
     def _enable_couple(self):
-        if self._radio_couple_oui.isChecked():
-            self._combo_couple.setEnabled(True)
-            self._spin_couple_partenaire_naissance.setEnabled(True)
-        else:
-            self._combo_couple.setEnabled(False)
-            self._spin_couple_partenaire_naissance.setEnabled(False)
+        id_checked = self._radio_couple_group.checkedId()
+        self._combo_couple.setEnabled(id_checked)
+        self._spin_couple_partenaire_naissance.setEnabled(id_checked)
 
-                
     def reject(self):
         pass
     
@@ -170,8 +314,47 @@ class GuiDecision(QtGui.QDialog):
             self._timer_automatique.stop()
         except AttributeError:
             pass
-        # decision = self._wdecision.get_value()
         answers = {}
+        try:
+            
+            if self._combo_naissance_mois.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser votre mois de naissance")
+            answers["CVQ_naissance_mois"] = self._combo_naissance_mois.currentIndex()
+            if self._spin_naissance_annee.value() == self._current_year:
+                raise ValueError(u"Vous devez préciser votre année de naissance")
+            answers["CVQ_naissance_annee"] = self._spin_naissance_annee.value()
+            if self._combo_naissance_pays.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser votre pays de naissance")
+            answers["CVQ_naissance_pays"] = self._combo_naissance_pays.currentIndex()
+            if self._spin_naissance_annee_pere.value() == self._current_year:
+                raise ValueError(u"Vous devez préciser l'année de naissance de "
+                                 u"votre père")
+            answers["CVQ_naissance_pere"] = self._spin_naissance_annee_pere.value()
+            if self._spin_naissance_annee_mere.value() == self._current_year:
+                raise ValueError(u"Vous devez préciser l'année de naissance de "
+                                 u"votre mère")
+            answers["CVQ_naissance_mere"] = self._spin_naissance_annee_mere.value()
+
+            # situation maritale -----------------------------------------------
+            if self._radio_couple_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous êtes en couple")
+            answers["CVQ_couple"] = self._radio_couple_group.checkedId()
+            if answers["CVQ_couple"] == 1:
+                if self._combo_couple.currentIndex() == 0:
+                    raise ValueError(u"Vous devez préciser depuis combien de "
+                                     u"temps vous êtes en couple")
+                answers["CVQ_couple_temps"] = self._combo_couple.currentIndex()
+                if self._spin_couple_partenaire_naissance.value() == self._current_year:
+                    raise ValueError(u"Vous devez préciser l'année de naissance "
+                                     u"de votre partenaire")
+                answers["CVQ_couple_partenaire_naissance"] = self._spin_couple_partenaire_naissance.value()
+
+
+        except ValueError as e:
+            QtGui.QMessageBox.warning(
+                self, u"Attention", e.message)
+            return
+        
         if not self._automatique:
             confirmation = QtGui.QMessageBox.question(
                 self, le2mtrans(u"Confirmation"),

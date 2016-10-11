@@ -21,17 +21,15 @@ except IOError:
     trans_CVQ = lambda x: x  # if there is an error, no translation
 
 
-# def get_histo_head():
-#     return [le2mtrans(u"Period"), le2mtrans(u"Decision"),
-#              le2mtrans(u"Period\npayoff"), le2mtrans(u"Cumulative\npayoff")]
+def get_text_explanation_demo():
+    return trans_CVQ(u"Merci de remplir le questionnaire ci-dessous."
+                     u"<br />Les informations saisies sont totalement anonymes.")
 
 
-def get_text_explanation():
+def get_text_explanation_coop():
     return trans_CVQ(u"")
 
 
-# def get_text_summary(period_content):
-#     txt = trans_CVQ(u"Summary text")
-#     return txt
-
+def get_text_explanation_bigfive():
+    return trans_CVQ(u"")
 
