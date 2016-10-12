@@ -6,8 +6,7 @@ from random import randint
 from twisted.internet import defer
 from client.cltremote import IRemote
 import CoopVoixQuestParams as pms
-from CoopVoixQuestGui import GuiDemo, GuiCoop
-import CoopVoixQuestTexts as texts_CVQ
+from CoopVoixQuestGui import GuiDemo, GuiCoop, GuiBigFiveTen
 
 
 logger = logging.getLogger("le2m")
@@ -19,10 +18,6 @@ class RemoteCVQ(IRemote):
     """
     def __init__(self, le2mclt):
         IRemote.__init__(self, le2mclt)
-        # self._histo_vars = [
-        #     "CVQ_period", "CVQ_decision",
-        #     "CVQ_periodpayoff", "CVQ_cumulativepayoff"]
-        # self._histo.append(texts_CVQ.get_histo_head())
 
     def remote_configure(self, params):
         """
@@ -53,7 +48,6 @@ class RemoteCVQ(IRemote):
         """
         logger.info(u"{} quest. demo".format(self._le2mclt.uid))
         if self._le2mclt.simulation:
-            # démo -------------------------------------------------------------
             answers = {}
             answers["CVQ_naissance_mois"] = randint(1, 12)
             answers["CVQ_naissance_annee"] = randint(1975, 2000)
@@ -121,14 +115,24 @@ class RemoteCVQ(IRemote):
         logger.info(u"{} quest. bigfive".format(self._le2mclt.uid))
         if self._le2mclt.simulation:
             answers = {}
+            answers["BFT_extraverti"] = randint(1, 6)
+            answers["BFT_critique"] = randint(1, 6)
+            answers["BFT_confiance"] = randint(1, 6)
+            answers["BFT_anxieux"] = randint(1, 6)
+            answers["BFT_complexe"] = randint(1, 6)
+            answers["BFT_reserve"] = randint(1, 6)
+            answers["BFT_sympathique"] = randint(1, 6)
+            answers["BFT_desorganise"] = randint(1, 6)
+            answers["BFT_calme"] = randint(1, 6)
+            answers["BFT_conventionnel"] = randint(1, 6)
             logger.info(
                 u"{} Send back {}".format(self._le2mclt.uid, answers))
             return answers
         else:
             defered = defer.Deferred()
-            ecran_demo = GuiDemo(
+            ecran_bigfive = GuiBigFiveTen(
                 defered, self._le2mclt.automatique,
                 self._le2mclt.screen)
-            ecran_demo.show()
+            ecran_bigfive.show()
             return defered
 

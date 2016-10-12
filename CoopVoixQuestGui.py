@@ -6,7 +6,7 @@ This module contains the GUI
 import logging
 from PyQt4 import QtGui, QtCore
 from util.utili18n import le2mtrans
-from datetime import datetime, time
+from datetime import datetime
 from random import randint
 import CoopVoixQuestParams as pms
 from CoopVoixQuestTexts import trans_CVQ
@@ -39,6 +39,13 @@ class MyHBoxLayout(QtGui.QHBoxLayout):
         self.addSpacerItem(
             QtGui.QSpacerItem(20, 5, QtGui.QSizePolicy.Expanding,
                               QtGui.QSizePolicy.Minimum))
+
+
+class MyComboBox(QtGui.QComboBox):
+    def __init__(self, items, width=120):
+        QtGui.QComboBox.__init__(self)
+        self.addItems(items)
+        self.setMaximumWidth(width)
 
 
 class GuiDemo(QtGui.QDialog):
@@ -605,16 +612,57 @@ class GuiBigFiveTen(QtGui.QDialog):
         CURRENT_LINE += 1
 
         gridlayout.addWidget(MyLabel(u"Extraverti, enthousiaste"), CURRENT_LINE, 0)
-        self._combo_extraverti = QtGui.QComboBox()
-        self._combo_extraverti.addItems(pms.ACCORD)
-        self._combo_extraverti.setMaximumWidth(120)
+        self._combo_extraverti = MyComboBox(pms.ACCORD)
         gridlayout.addWidget(self._combo_extraverti, CURRENT_LINE, 1)
 
         gridlayout.addWidget(MyLabel(u"Critique, agressif"), CURRENT_LINE, 2)
-        self._combo_critique = QtGui.QComboBox()
-        self._combo_critique.addItems(pms.ACCORD)
-        self._combo_critique.setMaximumWidth(120)
+        self._combo_critique = MyComboBox(pms.ACCORD)
         gridlayout.addWidget(self._combo_critique, CURRENT_LINE, 3)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Digne de confiance, auto-discipliné"),
+                             CURRENT_LINE, 0)
+        self._combo_confiance = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_confiance, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Anxieux, facilement contrarié"),
+                             CURRENT_LINE, 2)
+        self._combo_anxieux = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_anxieux, CURRENT_LINE, 3)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Ouvert à de nouvelles expériences, "
+                                     u"d'une personnalité complexe"),
+                             CURRENT_LINE, 0)
+        self._combo_complexe = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_complexe, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Réservé, tranquille"), CURRENT_LINE, 2)
+        self._combo_reserve = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_reserve, CURRENT_LINE, 3)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Sympathique, chaleureux"), CURRENT_LINE, 0)
+        self._combo_sympathique = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_sympathique, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Désorganisé, peu soigneux"), CURRENT_LINE, 2)
+        self._combo_desorganise = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_desorganise, CURRENT_LINE, 3)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Calme, émotionnellement stable"),
+                             CURRENT_LINE, 0)
+        self._combo_calme = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_calme, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Conventionnel, peu créatif"), CURRENT_LINE, 2)
+        self._combo_conventionnel = MyComboBox(pms.ACCORD)
+        gridlayout.addWidget(self._combo_conventionnel, CURRENT_LINE, 3)
 
         # buttons
         buttons = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok)
@@ -629,8 +677,6 @@ class GuiBigFiveTen(QtGui.QDialog):
             for k, v in self.__dict__.viewitems():
                 if "combo" in k:
                     v.setCurrentIndex(randint(1, v.count() - 1))
-                elif "group" in k:
-                    v.button(randint(0, 1)).click()
 
             self._timer_automatique = QtCore.QTimer()
             self._timer_automatique.timeout.connect(
@@ -648,32 +694,12 @@ class GuiBigFiveTen(QtGui.QDialog):
         answers = {}
         try:
 
-            if self._radio_confiance_group.checkedId() == -1:
-                raise ValueError(u"Vous devez préciser si vous faites confiance "
-                                 u"aux gens")
-            answers["COOP_confiance"] = self._radio_confiance_group.checkedId()
-            if self._combo_profite.currentIndex() == 0:
-                raise ValueError(u"Vous devez précisez si vous pensez que les "
-                                 u"gens essaient de profiter de vous")
-            answers["COOP_profite"] = self._combo_profite.currentIndex()
-            if self._combo_altruiste.currentIndex() == 0:
-                raise ValueError(u"Vous devez précisez si vous vous considérez "
-                                 u"altruiste")
-            answers["COOP_altruiste"] = self._combo_altruiste.currentIndex()
-            if self._combo_portefeuille_inconnu.currentIndex() == 0:
-                raise ValueError(u"Vous devez préciser si vous pensez que "
-                                 u"vous allez récupérer votre portefeuille ou "
-                                 u"sac avec l'argent s'il est retrouvé par un "
-                                 u"inconnu")
-            answers["COOP_portefeuille_inconnu"] = \
-                self._combo_portefeuille_inconnu.currentIndex()
-            if self._combo_portefeuille_voisin.currentIndex() == 0:
-                raise ValueError(u"Vous devez préciser si vous pensez que "
-                                 u"vous allez récupérer votre portefeuille ou "
-                                 u"sac avec l'argent s'il est retrouvé par un "
-                                 u"de vos voisins")
-            answers["COOP_portefeuille_voisin"] = \
-                self._combo_portefeuille_voisin.currentIndex()
+            for k, v in self.__dict__.viewitems():
+                if "combo" in k:
+                    if v.currentIndex() == 0:
+                        raise ValueError(u"Vous devez évaluer chacune des "
+                                         u"paires de caractéristiques")
+                    answers["BFT_{}".format(k.split("_", 2)[2])] = v.currentIndex()
 
         except ValueError as e:
             QtGui.QMessageBox.warning(
