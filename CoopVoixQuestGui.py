@@ -42,7 +42,7 @@ class MyHBoxLayout(QtGui.QHBoxLayout):
 
 
 class MyComboBox(QtGui.QComboBox):
-    def __init__(self, items, width=120):
+    def __init__(self, items, width=150):
         QtGui.QComboBox.__init__(self)
         self.addItems(items)
         self.setMaximumWidth(width)
@@ -60,7 +60,7 @@ class GuiDemo(QtGui.QDialog):
 
         wexplanation = WExplication(
             text=texts_CVQ.get_text_explanation_demo(),
-            size=(450, 80), parent=self)
+            size=(450, 60), parent=self)
         layout.addWidget(wexplanation)
 
         gridlayout = QtGui.QGridLayout()
@@ -200,17 +200,13 @@ class GuiDemo(QtGui.QDialog):
         gridlayout.addLayout(self._layout_logement, CURRENT_LINE, 3)
 
         gridlayout.addWidget(MyLabel(u"Revenus personnels mensuels nets"), CURRENT_LINE, 4)
-        self._combo_revenu = QtGui.QComboBox()
-        self._combo_revenu.addItems(pms.REVENUS)
-        self._combo_revenu.setMaximumWidth(100)
+        self._combo_revenu = MyComboBox(pms.REVENUS)
         gridlayout.addWidget(self._combo_revenu, CURRENT_LINE, 5)
 
         CURRENT_LINE += 1
 
         gridlayout.addWidget(MyLabel(u"Catégorie socio-professionnelle"), CURRENT_LINE, 0)
-        self._combo_csp = QtGui.QComboBox()
-        self._combo_csp.addItems(pms.CSP)
-        self._combo_csp.setMaximumWidth(100)
+        self._combo_csp = MyComboBox(pms.CSP, width=150)
         gridlayout.addWidget(self._combo_csp, CURRENT_LINE, 1, 1, 2)
 
         CURRENT_LINE += 1
@@ -461,9 +457,7 @@ class GuiCoop(QtGui.QDialog):
                                      u"en ont l'occasion,<br />ou essaient d' "
                                      u"être justes?"),
                              CURRENT_LINE, 0)
-        self._combo_profite = QtGui.QComboBox()
-        self._combo_profite.addItems(pms.PROFITE)
-        self._combo_profite.setMaximumWidth(120)
+        self._combo_profite = MyComboBox(pms.PROFITE, width=150)
         gridlayout.addWidget(self._combo_profite, CURRENT_LINE, 1)
 
         CURRENT_LINE += 1
