@@ -26,9 +26,9 @@ class MyHline(QtGui.QFrame):
 
 
 class MyLabel(QtGui.QLabel):
-    def __init__(self, text):
+    def __init__(self, text, align=QtCore.Qt.AlignRight):
         QtGui.QLabel.__init__(self, text)
-        self.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.setAlignment(align | QtCore.Qt.AlignVCenter)
 
 
 class MyHBoxLayout(QtGui.QHBoxLayout):
@@ -375,11 +375,11 @@ class GuiDemo(QtGui.QDialog):
             if self._radio_fumeur_group.checkedId() == -1:
                 raise ValueError(u"Vous devez préciser si vous fumez")
             answers["CVQ_fumeur"] = self._radio_fumeur_group.checkedId()
-            heure_lever = self._timeedit_lever.time().toString("hh:mm")
+            heure_lever = str(self._timeedit_lever.time().toString("hh:mm"))
             if heure_lever == "00:00":
                 raise ValueError(u"Vous devez préciser votre heure de lever")
             answers["CVQ_lever"] = heure_lever
-            sommeil = self._timeedit_sommeil.time().toString("hh:mm")
+            sommeil = str(self._timeedit_sommeil.time().toString("hh:mm"))
             if sommeil == "00:00":
                 raise ValueError(u"Vous devez préciser votre nombre d'heures "
                                  u"de sommeil")
@@ -389,7 +389,8 @@ class GuiDemo(QtGui.QDialog):
                                  u"médicaments")
             answers["CVQ_medicaments"] = self._radio_medicaments_group.checkedId()
             if answers["CVQ_medicaments"] == 1:
-                medocs = unicode(self._lineedit_medicaments.text().toUtf8(), "utf8")
+                medocs = unicode(self._lineedit_medicaments.text().toUtf8(),
+                                     encoding="UTF-8")
                 if not medocs:
                     raise ValueError(u"Vous devez préciser les noms de vos "
                                      u"médicaments")
@@ -455,13 +456,10 @@ class GuiCoop(QtGui.QDialog):
 
         CURRENT_LINE += 1
 
-        gridlayout.addWidget(MyLabel(u"Pensez-vous qu'en général les gens "
+        gridlayout.addWidget(MyLabel(u"Pensez-vous qu'en général les gens<br />"
                                      u"essaient de profiter de vous lorsqu'ils "
-                                     u"en ont l'occasion,<br />ou essaient-ils d' "
-                                     u"être justes?<br /><em>(1 signifie que "
-                                     u"les gens essaient de "
-                                     u"profiter de vous et<br />8 que les gens "
-                                     u"essaient d'être justes).</em>"),
+                                     u"en ont l'occasion,<br />ou essaient d' "
+                                     u"être justes?"),
                              CURRENT_LINE, 0)
         self._combo_profite = QtGui.QComboBox()
         self._combo_profite.addItems(pms.PROFITE)
@@ -474,7 +472,7 @@ class GuiCoop(QtGui.QDialog):
                                      u"d'altruiste/généreux?"), CURRENT_LINE, 0)
         self._combo_altruiste = QtGui.QComboBox()
         self._combo_altruiste.addItems(pms.DEGRES)
-        self._combo_altruiste.setMaximumWidth(120)
+        self._combo_altruiste.setMaximumWidth(150)
         gridlayout.addWidget(self._combo_altruiste, CURRENT_LINE, 1)
 
         CURRENT_LINE += 1
@@ -488,7 +486,7 @@ class GuiCoop(QtGui.QDialog):
                              CURRENT_LINE, 0)
         self._combo_portefeuille_inconnu = QtGui.QComboBox()
         self._combo_portefeuille_inconnu.addItems(pms.PROBABLE)
-        self._combo_portefeuille_inconnu.setMaximumWidth(120)
+        self._combo_portefeuille_inconnu.setMaximumWidth(150)
         gridlayout.addWidget(self._combo_portefeuille_inconnu, CURRENT_LINE, 1)
 
         CURRENT_LINE += 1
@@ -496,7 +494,7 @@ class GuiCoop(QtGui.QDialog):
         gridlayout.addWidget(MyLabel(u"Si vous perdiez votre portefeuille "
                                      u"ou votre sac à main qui contient 200€<br />"
                                      u"et que le portefeuille ou sac à main "
-                                     u"est retrouvé <strong>par un de vos"
+                                     u"est retrouvé <strong>par un de vos "
                                      u"voisins</strong>.<br />Allez-vous "
                                      u"le récupérer avec l'argent?"),
                              CURRENT_LINE, 0)
@@ -597,7 +595,7 @@ class GuiBigFiveTen(QtGui.QDialog):
                  u"vous correspondre. Veuillez indiquer dans quelle mesure vous "
                  u"pensez qu'ils vous correspondent. Veuillez évaluer la paire "
                  u"de caractéristiques, même si une des caractéristiques "
-                 u"s'applique plus que l'autre.", html=False)
+                 u"s'applique plus que l'autre.", html=False, size=(600, 80))
         layout.addWidget(explanation)
 
         gridlayout = QtGui.QGridLayout()
@@ -606,8 +604,9 @@ class GuiBigFiveTen(QtGui.QDialog):
 
         CURRENT_LINE = 0
 
-        gridlayout.addWidget(QtGui.QLabel(u"Je me considère comme étant"),
-                             CURRENT_LINE, 0, 0, 1, 4)
+        gridlayout.addWidget(MyLabel(u"<strong>Je me considère comme étant</strong>",
+                                     align=QtCore.Qt.AlignHCenter),
+                             CURRENT_LINE, 0, 1, 4)
 
         CURRENT_LINE += 1
 
