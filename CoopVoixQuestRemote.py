@@ -65,6 +65,8 @@ class RemoteCVQ(IRemote):
             answers["CVQ_revenu"] = randint(0, 7)
             answers["CVQ_csp"] = randint(0, 6)
             answers["CVQ_fumeur"] = randint(0, 1)
+            answers["CVQ_cigarette"] = randint(0, 30)
+            answers["CVQ_cigarette_electronique"] = randint(0, 1)
             answers["CVQ_lever"] = "0{}:00".format(randint(6, 8))
             answers["CVQ_sommeil"] = "0{}:00".format(randint(6, 9))
             answers["CVQ_medicaments"] = randint(0, 1)
@@ -72,6 +74,13 @@ class RemoteCVQ(IRemote):
                 answers["CVQ_medicaments_noms"] = u"aspirine"
             answers["CVQ_chant"] = randint(0, 1)
             answers["CVQ_theatre"] = randint(0, 1)
+            answers["CVQ_hier_douche"] = randint(0, 1)
+            answers["CVQ_hier_deodorant"] = randint(0, 1)
+            answers["CVQ_hier_parfum"] = randint(0, 1)
+            answers["CVQ_jour_douche"] = randint(0, 1)
+            answers["CVQ_jour_deodorant"] = randint(0, 1)
+            answers["CVQ_jour_parfum"] = randint(0, 1)
+            answers["CVQ_jour_sport"] = randint(0, 1)
 
             logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
             return answers

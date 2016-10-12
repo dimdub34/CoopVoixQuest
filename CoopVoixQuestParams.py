@@ -42,6 +42,9 @@ ACCORD = [U"Choisir", u"Fortement en désaccord", u"En désaccord",
           u"Légèrement en désaccord", u"Ni en désaccord ni en accord",
           u"En accord", u"Fortement en accord"]
 
+FREQUENCE = [u"Choisir", u"Jamais", u"Une fois", u"Plus d'une fois",
+             u"Souvent", u"Très souvent"]
+
 # parameters -------------------------------------------------------------------
 NOMBRE_PERIODES = 0
 TAILLE_GROUPES = 0

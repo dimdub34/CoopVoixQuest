@@ -216,17 +216,48 @@ class GuiDemo(QtGui.QDialog):
             [self._radio_fumeur_oui, self._radio_fumeur_non])
         gridlayout.addLayout(self._layout_fumeur, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(MyLabel(u"Heure du lever"), CURRENT_LINE, 2)
+        gridlayout.addWidget(MyLabel(u"Combien de cigarettes (hors électronique) par jour?"),
+                             CURRENT_LINE, 2)
+        self._spin_cigarette = QtGui.QSpinBox()
+        self._spin_cigarette.setMinimum(0)
+        self._spin_cigarette.setMaximum(100)
+        self._spin_cigarette.setSingleStep(1)
+        self._spin_cigarette.setButtonSymbols(QtGui.QSpinBox.NoButtons)
+        self._spin_cigarette.setValue(0)
+        self._spin_cigarette.setMaximumWidth(60)
+        gridlayout.addWidget(self._spin_cigarette, CURRENT_LINE, 3)
+
+        gridlayout.addWidget(MyLabel(u"Fumez-vous la cigarette électronique?"),
+                             CURRENT_LINE, 4)
+        self._radio_cigarette_electronique_oui = QtGui.QRadioButton(u"oui")
+        self._radio_cigarette_electronique_non = QtGui.QRadioButton(u"non")
+        self._radio_cigarette_electronique_group = QtGui.QButtonGroup()
+        self._radio_cigarette_electronique_group.addButton(self._radio_cigarette_electronique_oui, 1)
+        self._radio_cigarette_electronique_group.addButton(self._radio_cigarette_electronique_non, 0)
+        self._layout_cigarette_electronique = MyHBoxLayout(
+            [self._radio_cigarette_electronique_oui, self._radio_cigarette_electronique_non])
+        gridlayout.addLayout(self._layout_cigarette_electronique, CURRENT_LINE, 5)
+
+        self._spin_cigarette.setEnabled(False)
+        self._radio_cigarette_electronique_oui.setEnabled(False)
+        self._radio_cigarette_electronique_non.setEnabled(False)
+        self._radio_fumeur_group.buttonClicked.connect(self._enable_cigarette)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"A quelle heure vous êtes-vous levé(e) ce matin?"),
+                             CURRENT_LINE, 0)
         self._timeedit_lever = QtGui.QTimeEdit()
         self._timeedit_lever.setDisplayFormat("HH:mm")
-        self._timeedit_lever.setMaximumWidth(60)
-        gridlayout.addWidget(self._timeedit_lever, CURRENT_LINE, 3)
+        self._timeedit_lever.setMaximumWidth(80)
+        gridlayout.addWidget(self._timeedit_lever, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(MyLabel(u"Nombre d'heures de sommeil"), CURRENT_LINE, 4)
+        gridlayout.addWidget(MyLabel(u"Combien d'heures avez-vous dormi la nuit dernière?"),
+                             CURRENT_LINE, 2)
         self._timeedit_sommeil = QtGui.QTimeEdit()
         self._timeedit_sommeil.setDisplayFormat("HH:mm")
-        self._timeedit_sommeil.setMaximumWidth(60)
-        gridlayout.addWidget(self._timeedit_sommeil, CURRENT_LINE, 5)
+        self._timeedit_sommeil.setMaximumWidth(80)
+        gridlayout.addWidget(self._timeedit_sommeil, CURRENT_LINE, 3)
 
         CURRENT_LINE += 1
 
@@ -242,7 +273,8 @@ class GuiDemo(QtGui.QDialog):
 
         gridlayout.addWidget(MyLabel(u"Lesquels"), CURRENT_LINE, 2)
         self._lineedit_medicaments = QtGui.QLineEdit()
-        gridlayout.addWidget(self._lineedit_medicaments, CURRENT_LINE, 3)
+        self._lineedit_medicaments.setMaximumWidth(200)
+        gridlayout.addWidget(self._lineedit_medicaments, CURRENT_LINE, 3, 1, 2)
 
         self._lineedit_medicaments.setEnabled(False)
         self._radio_medicaments_group.buttonClicked.connect(
@@ -270,6 +302,93 @@ class GuiDemo(QtGui.QDialog):
         self._layout_theatre = MyHBoxLayout(
             [self._radio_theatre_oui, self._radio_theatre_non])
         gridlayout.addLayout(self._layout_theatre, CURRENT_LINE, 3)
+
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Avez-vous pris une douche (un bain) hier soir?"),
+                             CURRENT_LINE, 0)
+        self._radio_hier_douche_oui = QtGui.QRadioButton(u"oui")
+        self._radio_hier_douche_non = QtGui.QRadioButton(u"non")
+        self._radio_hier_douche_group = QtGui.QButtonGroup()
+        self._radio_hier_douche_group.addButton(self._radio_hier_douche_oui, 1)
+        self._radio_hier_douche_group.addButton(self._radio_hier_douche_non, 0)
+        self._layout_hier_douche = MyHBoxLayout(
+            [self._radio_hier_douche_oui, self._radio_hier_douche_non])
+        gridlayout.addLayout(self._layout_hier_douche, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Avez-vous mis du déodorant hier soir?"),
+                             CURRENT_LINE, 2)
+        self._radio_hier_deodorant_oui = QtGui.QRadioButton(u"oui")
+        self._radio_hier_deodorant_non = QtGui.QRadioButton(u"non")
+        self._radio_hier_deodorant_group = QtGui.QButtonGroup()
+        self._radio_hier_deodorant_group.addButton(self._radio_hier_deodorant_oui, 1)
+        self._radio_hier_deodorant_group.addButton(self._radio_hier_deodorant_non, 0)
+        self._layout_hier_deodorant = MyHBoxLayout(
+            [self._radio_hier_deodorant_oui, self._radio_hier_deodorant_non])
+        gridlayout.addLayout(self._layout_hier_deodorant, CURRENT_LINE, 3)
+        
+        gridlayout.addWidget(MyLabel(u"Avez-vous mis du parfum hier soir?"),
+                             CURRENT_LINE, 4)
+        self._radio_hier_parfum_oui = QtGui.QRadioButton(u"oui")
+        self._radio_hier_parfum_non = QtGui.QRadioButton(u"non")
+        self._radio_hier_parfum_group = QtGui.QButtonGroup()
+        self._radio_hier_parfum_group.addButton(self._radio_hier_parfum_oui, 1)
+        self._radio_hier_parfum_group.addButton(self._radio_hier_parfum_non, 0)
+        self._layout_hier_parfum = MyHBoxLayout(
+            [self._radio_hier_parfum_oui, self._radio_hier_parfum_non])
+        gridlayout.addLayout(self._layout_hier_parfum, CURRENT_LINE, 5)
+        
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(
+            MyLabel(u"Avez-vous pris une douche (un bain) aujourd'hui?"),
+            CURRENT_LINE, 0)
+        self._radio_jour_douche_oui = QtGui.QRadioButton(u"oui")
+        self._radio_jour_douche_non = QtGui.QRadioButton(u"non")
+        self._radio_jour_douche_group = QtGui.QButtonGroup()
+        self._radio_jour_douche_group.addButton(self._radio_jour_douche_oui, 1)
+        self._radio_jour_douche_group.addButton(self._radio_jour_douche_non, 0)
+        self._layout_jour_douche = MyHBoxLayout(
+            [self._radio_jour_douche_oui, self._radio_jour_douche_non])
+        gridlayout.addLayout(self._layout_jour_douche, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Avez-vous mis du déodorant aujourd'hui?"),
+                             CURRENT_LINE, 2)
+        self._radio_jour_deodorant_oui = QtGui.QRadioButton(u"oui")
+        self._radio_jour_deodorant_non = QtGui.QRadioButton(u"non")
+        self._radio_jour_deodorant_group = QtGui.QButtonGroup()
+        self._radio_jour_deodorant_group.addButton(
+            self._radio_jour_deodorant_oui, 1)
+        self._radio_jour_deodorant_group.addButton(
+            self._radio_jour_deodorant_non, 0)
+        self._layout_jour_deodorant = MyHBoxLayout(
+            [self._radio_jour_deodorant_oui, self._radio_jour_deodorant_non])
+        gridlayout.addLayout(self._layout_jour_deodorant, CURRENT_LINE, 3)
+
+        gridlayout.addWidget(MyLabel(u"Avez-vous mis du parfum aujourd'hui?"),
+                             CURRENT_LINE, 4)
+        self._radio_jour_parfum_oui = QtGui.QRadioButton(u"oui")
+        self._radio_jour_parfum_non = QtGui.QRadioButton(u"non")
+        self._radio_jour_parfum_group = QtGui.QButtonGroup()
+        self._radio_jour_parfum_group.addButton(self._radio_jour_parfum_oui, 1)
+        self._radio_jour_parfum_group.addButton(self._radio_jour_parfum_non, 0)
+        self._layout_jour_parfum = MyHBoxLayout(
+            [self._radio_jour_parfum_oui, self._radio_jour_parfum_non])
+        gridlayout.addLayout(self._layout_jour_parfum, CURRENT_LINE, 5)
+
+        CURRENT_LINE += 1
+        
+        gridlayout.addWidget(MyLabel(u"Avez-vous fait du sport aujourd'hui?"),
+                             CURRENT_LINE, 0)
+        self._radio_jour_sport_oui = QtGui.QRadioButton(u"oui")
+        self._radio_jour_sport_non = QtGui.QRadioButton(u"non")
+        self._radio_jour_sport_group = QtGui.QButtonGroup()
+        self._radio_jour_sport_group.addButton(self._radio_jour_sport_oui, 1)
+        self._radio_jour_sport_group.addButton(self._radio_jour_sport_non, 0)
+        self._layout_jour_sport = MyHBoxLayout(
+            [self._radio_jour_sport_oui, self._radio_jour_sport_non])
+        gridlayout.addLayout(self._layout_jour_sport, CURRENT_LINE, 1)
 
         # buttons
         buttons = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok)
@@ -302,6 +421,12 @@ class GuiDemo(QtGui.QDialog):
         id_checked = self._radio_couple_group.checkedId()
         self._combo_couple.setEnabled(id_checked)
         self._spin_couple_partenaire_naissance.setEnabled(id_checked)
+
+    def _enable_cigarette(self):
+        id_checked = self._radio_fumeur_group.checkedId()
+        self._spin_cigarette.setEnabled(id_checked)
+        self._radio_cigarette_electronique_oui.setEnabled(id_checked)
+        self._radio_cigarette_electronique_non.setEnabled(id_checked)
 
     def reject(self):
         pass
@@ -365,6 +490,13 @@ class GuiDemo(QtGui.QDialog):
             if self._radio_fumeur_group.checkedId() == -1:
                 raise ValueError(u"Vous devez préciser si vous fumez")
             answers["CVQ_fumeur"] = self._radio_fumeur_group.checkedId()
+            if answers["CVQ_fumeur"] == 1:
+                answers["CVS_cigarette"] = self._spin_cigarette.value()
+                if self._radio_cigarette_electronique_group.checkedId() == -1:
+                    raise ValueError(u"Vous devez préciser si vous fumez "
+                                     u"la cigarette électronique")
+                answers["CVQ_cigarette_electronique"] = \
+                    self._radio_cigarette_electronique_group.checkedId()
             heure_lever = str(self._timeedit_lever.time().toString("hh:mm"))
             if heure_lever == "00:00":
                 raise ValueError(u"Vous devez préciser votre heure de lever")
@@ -393,6 +525,7 @@ class GuiDemo(QtGui.QDialog):
                 raise ValueError(u"Vous devez préciser si vous faites du "
                                  u"théâtre")
             answers["CVQ_theatre"] = self._radio_theatre_group.checkedId()
+
 
 
         except ValueError as e:
@@ -602,12 +735,12 @@ class GuiBigFiveTen(QtGui.QDialog):
 
         CURRENT_LINE += 1
 
-        gridlayout.addWidget(MyLabel(u"Digne de confiance, auto-discipliné"),
+        gridlayout.addWidget(MyLabel(u"Digne de confiance, autodiscipliné"),
                              CURRENT_LINE, 0)
         self._combo_confiance = MyComboBox(pms.ACCORD)
         gridlayout.addWidget(self._combo_confiance, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(MyLabel(u"Anxieux, facilement contrarié"),
+        gridlayout.addWidget(MyLabel(u"Anxieux, facilement troublé"),
                              CURRENT_LINE, 2)
         self._combo_anxieux = MyComboBox(pms.ACCORD)
         gridlayout.addWidget(self._combo_anxieux, CURRENT_LINE, 3)
@@ -630,7 +763,7 @@ class GuiBigFiveTen(QtGui.QDialog):
         self._combo_sympathique = MyComboBox(pms.ACCORD)
         gridlayout.addWidget(self._combo_sympathique, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(MyLabel(u"Désorganisé, peu soigneux"), CURRENT_LINE, 2)
+        gridlayout.addWidget(MyLabel(u"Désorganisé, négligent"), CURRENT_LINE, 2)
         self._combo_desorganise = MyComboBox(pms.ACCORD)
         gridlayout.addWidget(self._combo_desorganise, CURRENT_LINE, 3)
 
