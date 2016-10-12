@@ -93,9 +93,7 @@ class GuiDemo(QtGui.QDialog):
         gridlayout.addWidget(MyLabel(u"Pays de naissance"), CURRENT_LINE, 4)
         pays = [u"Choisir"]
         pays.extend(sorted(COUNTRIES.viewvalues()))
-        self._combo_naissance_pays = QtGui.QComboBox()
-        self._combo_naissance_pays.addItems(pays)
-        self._combo_naissance_pays.setMaximumWidth(100)
+        self._combo_naissance_pays = MyComboBox(pays, 150)
         gridlayout.addWidget(self._combo_naissance_pays, CURRENT_LINE, 5)
 
         CURRENT_LINE += 1
@@ -206,7 +204,7 @@ class GuiDemo(QtGui.QDialog):
         CURRENT_LINE += 1
 
         gridlayout.addWidget(MyLabel(u"Catégorie socio-professionnelle"), CURRENT_LINE, 0)
-        self._combo_csp = MyComboBox(pms.CSP, width=150)
+        self._combo_csp = MyComboBox(pms.CSP, width=200)
         gridlayout.addWidget(self._combo_csp, CURRENT_LINE, 1, 1, 2)
 
         CURRENT_LINE += 1
@@ -457,16 +455,14 @@ class GuiCoop(QtGui.QDialog):
                                      u"en ont l'occasion,<br />ou essaient d' "
                                      u"être justes?"),
                              CURRENT_LINE, 0)
-        self._combo_profite = MyComboBox(pms.PROFITE, width=150)
+        self._combo_profite = MyComboBox(pms.PROFITE, width=200)
         gridlayout.addWidget(self._combo_profite, CURRENT_LINE, 1)
 
         CURRENT_LINE += 1
 
         gridlayout.addWidget(MyLabel(u"Vous considérez comme quelqu'un "
                                      u"d'altruiste/généreux?"), CURRENT_LINE, 0)
-        self._combo_altruiste = QtGui.QComboBox()
-        self._combo_altruiste.addItems(pms.DEGRES)
-        self._combo_altruiste.setMaximumWidth(150)
+        self._combo_altruiste = MyComboBox(pms.DEGRES)
         gridlayout.addWidget(self._combo_altruiste, CURRENT_LINE, 1)
 
         CURRENT_LINE += 1
@@ -478,9 +474,7 @@ class GuiCoop(QtGui.QDialog):
                                      u"inconnu</strong>.<br />Allez-vous "
                                      u"le récupérer avec l'argent?"),
                              CURRENT_LINE, 0)
-        self._combo_portefeuille_inconnu = QtGui.QComboBox()
-        self._combo_portefeuille_inconnu.addItems(pms.PROBABLE)
-        self._combo_portefeuille_inconnu.setMaximumWidth(150)
+        self._combo_portefeuille_inconnu = MyComboBox(pms.PROBABLE)
         gridlayout.addWidget(self._combo_portefeuille_inconnu, CURRENT_LINE, 1)
 
         CURRENT_LINE += 1
@@ -492,9 +486,7 @@ class GuiCoop(QtGui.QDialog):
                                      u"voisins</strong>.<br />Allez-vous "
                                      u"le récupérer avec l'argent?"),
                              CURRENT_LINE, 0)
-        self._combo_portefeuille_voisin = QtGui.QComboBox()
-        self._combo_portefeuille_voisin.addItems(pms.PROBABLE)
-        self._combo_portefeuille_voisin.setMaximumWidth(120)
+        self._combo_portefeuille_voisin = MyComboBox(pms.PROBABLE)
         gridlayout.addWidget(self._combo_portefeuille_voisin, CURRENT_LINE, 1)
 
         # buttons
