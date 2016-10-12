@@ -50,10 +50,10 @@ class PartieCVQ(Partie):
     @defer.inlineCallbacks
     def display_decision(self):
         logger.debug(u"{} Decision".format(self.joueur))
-        answers_demo = yield(self.remote.callRemote("display_demo"))
-        for k, v in answers_demo.viewitems():
-            setattr(self.currentperiod, k, v)
-        self.joueur.info(u"Ok quest. démo")
+        # answers_demo = yield(self.remote.callRemote("display_demo"))
+        # for k, v in answers_demo.viewitems():
+        #     setattr(self.currentperiod, k, v)
+        # self.joueur.info(u"Ok quest. démo")
         answers_coop = yield(self.remote.callRemote("display_coop"))
         for k, v in answers_coop.viewitems():
             setattr(self.currentperiod, k, v)
@@ -97,8 +97,12 @@ class RepetitionsCVQ(Base):
     CVQ_chant = Column(Integer)
     CVQ_theatre = Column(Integer)
 
-
     # coop
+    COOP_confiance = Column(Integer)
+    COOP_profite = Column(Integer)
+    COOP_altruiste = Column(Integer)
+    COOP_portefeuille_inconnu = Column(Integer)
+    COOP_portefeuille_voisin = Column(Integer)
 
     # big five
 

@@ -412,3 +412,281 @@ class GuiDemo(QtGui.QDialog):
         logger.info(u"Send back {}".format(answers))
         self.accept()
         self._defered.callback(answers)
+
+
+class GuiCoop(QtGui.QDialog):
+    def __init__(self, defered, automatique, parent):
+
+        super(GuiCoop, self).__init__(parent)
+
+        self._defered = defered
+        self._automatique = automatique
+
+        layout = QtGui.QVBoxLayout(self)
+
+        gridlayout = QtGui.QGridLayout()
+        gridlayout.setHorizontalSpacing(20)
+        layout.addLayout(gridlayout)
+
+        CURRENT_LINE = 0
+
+        gridlayout.addWidget(MyLabel(u"De manière générale, diriez-vous que "
+                                     u"vous faites confiance à la plupart des "
+                                     u"gens,<br />ou que vous êtes très prudent "
+                                     u"quand vous avez affaire à eux?"),
+                             CURRENT_LINE, 0)
+        self._radio_confiance_oui = QtGui.QRadioButton(u"Je fais confiance à "
+                                                       u"la plupart des gens")
+        self._radio_confiance_non = QtGui.QRadioButton(u"Je suis très prudent "
+                                                       u"vis à vis d'eux")
+        self._radio_confiance_group = QtGui.QButtonGroup()
+        self._radio_confiance_group.addButton(self._radio_confiance_oui, 1)
+        self._radio_confiance_group.addButton(self._radio_confiance_non, 0)
+        self._layout_confiance = MyHBoxLayout([self._radio_confiance_oui,
+                                               self._radio_confiance_non])
+        gridlayout.addLayout(self._layout_confiance, CURRENT_LINE, 1)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Pensez-vous qu'en général les gens "
+                                     u"essaient de profiter de vous lorsqu'ils "
+                                     u"en ont l'occasion,<br />ou essaient-ils d' "
+                                     u"être justes?<br /><em>(1 signifie que "
+                                     u"les gens essaient de "
+                                     u"profiter de vous et<br />8 que les gens "
+                                     u"essaient d'être justes).</em>"),
+                             CURRENT_LINE, 0)
+        self._combo_profite = QtGui.QComboBox()
+        self._combo_profite.addItems(pms.PROFITE)
+        self._combo_profite.setMaximumWidth(120)
+        gridlayout.addWidget(self._combo_profite, CURRENT_LINE, 1)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Vous considérez comme quelqu'un "
+                                     u"d'altruiste/généreux?"), CURRENT_LINE, 0)
+        self._combo_altruiste = QtGui.QComboBox()
+        self._combo_altruiste.addItems(pms.DEGRES)
+        self._combo_altruiste.setMaximumWidth(120)
+        gridlayout.addWidget(self._combo_altruiste, CURRENT_LINE, 1)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Si vous perdiez votre portefeuille "
+                                     u"ou votre sac à main qui contient 200€<br />"
+                                     u"et que le portefeuille ou sac à main "
+                                     u"est retrouvé <strong>par un "
+                                     u"inconnu</strong>.<br />Allez-vous "
+                                     u"le récupérer avec l'argent?"),
+                             CURRENT_LINE, 0)
+        self._combo_portefeuille_inconnu = QtGui.QComboBox()
+        self._combo_portefeuille_inconnu.addItems(pms.PROBABLE)
+        self._combo_portefeuille_inconnu.setMaximumWidth(120)
+        gridlayout.addWidget(self._combo_portefeuille_inconnu, CURRENT_LINE, 1)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Si vous perdiez votre portefeuille "
+                                     u"ou votre sac à main qui contient 200€<br />"
+                                     u"et que le portefeuille ou sac à main "
+                                     u"est retrouvé <strong>par un de vos"
+                                     u"voisins</strong>.<br />Allez-vous "
+                                     u"le récupérer avec l'argent?"),
+                             CURRENT_LINE, 0)
+        self._combo_portefeuille_voisin = QtGui.QComboBox()
+        self._combo_portefeuille_voisin.addItems(pms.PROBABLE)
+        self._combo_portefeuille_voisin.setMaximumWidth(120)
+        gridlayout.addWidget(self._combo_portefeuille_voisin, CURRENT_LINE, 1)
+
+        # buttons
+        buttons = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok)
+        buttons.accepted.connect(self._accept)
+        layout.addWidget(buttons)
+
+        self.setWindowTitle(trans_CVQ(u"Questionnaire"))
+        self.adjustSize()
+        self.setFixedSize(self.size())
+
+        if self._automatique:
+            for k, v in self.__dict__.viewitems():
+                if "combo" in k:
+                    v.setCurrentIndex(randint(1, v.count() - 1))
+                elif "group" in k:
+                    v.button(randint(0, 1)).click()
+
+            self._timer_automatique = QtCore.QTimer()
+            self._timer_automatique.timeout.connect(
+                buttons.button(QtGui.QDialogButtonBox.Ok).click)
+            self._timer_automatique.start(7000)
+
+    def reject(self):
+        pass
+
+    def _accept(self):
+        try:
+            self._timer_automatique.stop()
+        except AttributeError:
+            pass
+        answers = {}
+        try:
+
+            if self._radio_confiance_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous faites confiance "
+                                 u"aux gens")
+            answers["COOP_confiance"] = self._radio_confiance_group.checkedId()
+            if self._combo_profite.currentIndex() == 0:
+                raise ValueError(u"Vous devez précisez si vous pensez que les "
+                                 u"gens essaient de profiter de vous")
+            answers["COOP_profite"] = self._combo_profite.currentIndex()
+            if self._combo_altruiste.currentIndex() == 0:
+                raise ValueError(u"Vous devez précisez si vous vous considérez "
+                                 u"altruiste")
+            answers["COOP_altruiste"] = self._combo_altruiste.currentIndex()
+            if self._combo_portefeuille_inconnu.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser si vous pensez que "
+                                 u"vous allez récupérer votre portefeuille ou "
+                                 u"sac avec l'argent s'il est retrouvé par un "
+                                 u"inconnu")
+            answers["COOP_portefeuille_inconnu"] = \
+                self._combo_portefeuille_inconnu.currentIndex()
+            if self._combo_portefeuille_voisin.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser si vous pensez que "
+                                 u"vous allez récupérer votre portefeuille ou "
+                                 u"sac avec l'argent s'il est retrouvé par un "
+                                 u"de vos voisins")
+            answers["COOP_portefeuille_voisin"] = \
+                self._combo_portefeuille_voisin.currentIndex()
+
+        except ValueError as e:
+            QtGui.QMessageBox.warning(
+                self, u"Attention", e.message)
+            return
+
+        if not self._automatique:
+            confirmation = QtGui.QMessageBox.question(
+                self, le2mtrans(u"Confirmation"),
+                le2mtrans(u"Do you confirm your choice?"),
+                QtGui.QMessageBox.No | QtGui.QMessageBox.Yes)
+            if confirmation != QtGui.QMessageBox.Yes:
+                return
+        logger.info(u"Send back {}".format(answers))
+        self.accept()
+        self._defered.callback(answers)
+
+
+class GuiBigFiveTen(QtGui.QDialog):
+    def __init__(self, defered, automatique, parent):
+
+        super(GuiBigFiveTen, self).__init__(parent)
+
+        self._defered = defered
+        self._automatique = automatique
+
+        layout = QtGui.QVBoxLayout(self)
+
+        explanation = WExplication(
+            parent=self,
+            text=u"Voici une liste de traits de caractère qui peuvent ou non "
+                 u"vous correspondre. Veuillez indiquer dans quelle mesure vous "
+                 u"pensez qu'ils vous correspondent. Veuillez évaluer la paire "
+                 u"de caractéristiques, même si une des caractéristiques "
+                 u"s'applique plus que l'autre.", html=False)
+        layout.addWidget(explanation)
+
+        gridlayout = QtGui.QGridLayout()
+        gridlayout.setHorizontalSpacing(20)
+        layout.addLayout(gridlayout)
+
+        CURRENT_LINE = 0
+
+        gridlayout.addWidget(QtGui.QLabel(u"Je me considère comme étant"),
+                             CURRENT_LINE, 0, 0, 1, 4)
+
+        CURRENT_LINE += 1
+
+        gridlayout.addWidget(MyLabel(u"Extraverti, enthousiaste"), CURRENT_LINE, 0)
+        self._combo_extraverti = QtGui.QComboBox()
+        self._combo_extraverti.addItems(pms.ACCORD)
+        self._combo_extraverti.setMaximumWidth(120)
+        gridlayout.addWidget(self._combo_extraverti, CURRENT_LINE, 1)
+
+        gridlayout.addWidget(MyLabel(u"Critique, agressif"), CURRENT_LINE, 2)
+        self._combo_critique = QtGui.QComboBox()
+        self._combo_critique.addItems(pms.ACCORD)
+        self._combo_critique.setMaximumWidth(120)
+        gridlayout.addWidget(self._combo_critique, CURRENT_LINE, 3)
+
+        # buttons
+        buttons = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok)
+        buttons.accepted.connect(self._accept)
+        layout.addWidget(buttons)
+
+        self.setWindowTitle(trans_CVQ(u"Questionnaire"))
+        self.adjustSize()
+        self.setFixedSize(self.size())
+
+        if self._automatique:
+            for k, v in self.__dict__.viewitems():
+                if "combo" in k:
+                    v.setCurrentIndex(randint(1, v.count() - 1))
+                elif "group" in k:
+                    v.button(randint(0, 1)).click()
+
+            self._timer_automatique = QtCore.QTimer()
+            self._timer_automatique.timeout.connect(
+                buttons.button(QtGui.QDialogButtonBox.Ok).click)
+            self._timer_automatique.start(7000)
+
+    def reject(self):
+        pass
+
+    def _accept(self):
+        try:
+            self._timer_automatique.stop()
+        except AttributeError:
+            pass
+        answers = {}
+        try:
+
+            if self._radio_confiance_group.checkedId() == -1:
+                raise ValueError(u"Vous devez préciser si vous faites confiance "
+                                 u"aux gens")
+            answers["COOP_confiance"] = self._radio_confiance_group.checkedId()
+            if self._combo_profite.currentIndex() == 0:
+                raise ValueError(u"Vous devez précisez si vous pensez que les "
+                                 u"gens essaient de profiter de vous")
+            answers["COOP_profite"] = self._combo_profite.currentIndex()
+            if self._combo_altruiste.currentIndex() == 0:
+                raise ValueError(u"Vous devez précisez si vous vous considérez "
+                                 u"altruiste")
+            answers["COOP_altruiste"] = self._combo_altruiste.currentIndex()
+            if self._combo_portefeuille_inconnu.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser si vous pensez que "
+                                 u"vous allez récupérer votre portefeuille ou "
+                                 u"sac avec l'argent s'il est retrouvé par un "
+                                 u"inconnu")
+            answers["COOP_portefeuille_inconnu"] = \
+                self._combo_portefeuille_inconnu.currentIndex()
+            if self._combo_portefeuille_voisin.currentIndex() == 0:
+                raise ValueError(u"Vous devez préciser si vous pensez que "
+                                 u"vous allez récupérer votre portefeuille ou "
+                                 u"sac avec l'argent s'il est retrouvé par un "
+                                 u"de vos voisins")
+            answers["COOP_portefeuille_voisin"] = \
+                self._combo_portefeuille_voisin.currentIndex()
+
+        except ValueError as e:
+            QtGui.QMessageBox.warning(
+                self, u"Attention", e.message)
+            return
+
+        if not self._automatique:
+            confirmation = QtGui.QMessageBox.question(
+                self, le2mtrans(u"Confirmation"),
+                le2mtrans(u"Do you confirm your choice?"),
+                QtGui.QMessageBox.No | QtGui.QMessageBox.Yes)
+            if confirmation != QtGui.QMessageBox.Yes:
+                return
+        logger.info(u"Send back {}".format(answers))
+        self.accept()
+        self._defered.callback(answers)

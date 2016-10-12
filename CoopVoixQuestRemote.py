@@ -6,7 +6,7 @@ from random import randint
 from twisted.internet import defer
 from client.cltremote import IRemote
 import CoopVoixQuestParams as pms
-from CoopVoixQuestGui import GuiDemo
+from CoopVoixQuestGui import GuiDemo, GuiCoop
 import CoopVoixQuestTexts as texts_CVQ
 
 
@@ -98,14 +98,19 @@ class RemoteCVQ(IRemote):
         logger.info(u"{} quest. coop".format(self._le2mclt.uid))
         if self._le2mclt.simulation:
             answers = {}
+            answers["COOP_confiance"] = randint(0, 1)
+            answers["COOP_profite"] = randint(1, 9)
+            answers["COOP_altruiste"] = randint(1, 4)
+            answers["COOP_portefeuille_inconnu"] = randint(1, 4)
+            answers["COOP_portefeuille_voisin"] = randint(1, 4)
             logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
             return answers
         else:
             defered = defer.Deferred()
-            ecran_demo = GuiDemo(
+            ecran_coop = GuiCoop(
                 defered, self._le2mclt.automatique,
                 self._le2mclt.screen)
-            ecran_demo.show()
+            ecran_coop.show()
             return defered
 
     def remote_display_bigfive(self):

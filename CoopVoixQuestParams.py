@@ -29,6 +29,19 @@ REVENUS = [u"Choisir", u"Moins de 200€", u"De 200 à 500€", u"De 500 à 950�
            u"De 1745 à 2050€", u"De 2050 à 2385€", u"De 2385 à 2764€",
            u"De 2764 à 3280€", u"Plus de 3208€"]
 
+PROFITE = [u"Choisir", u"0 - Les gens essaient de profiter de moi", u"1",
+           u"2", u"3", u"4", u"5", u"6", u"7", u"8 - Les gens essaient d'être "
+                                               u"justes"]
+
+DEGRES = [u"Choisir", u"Peu", u"Modérément", u"Plutôt", u"Très"]
+
+PROBABLE = [u"Choisir", u"C'est très probable", u"C'est plutôt probable",
+            u"C'est peu probable", u"C'est improbable"]
+
+ACCORD = [U"Choisir", u"Fortement en désaccord", u"En désaccord",
+          u"Légèrement en désaccord", u"Ni en désaccord ni en accord",
+          u"En accord", u"Fortement en accord"]
+
 # parameters -------------------------------------------------------------------
 NOMBRE_PERIODES = 0
 TAILLE_GROUPES = 0
