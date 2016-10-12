@@ -93,7 +93,7 @@ class GuiDemo(QtGui.QDialog):
         gridlayout.addWidget(MyLabel(u"Pays de naissance"), CURRENT_LINE, 4)
         pays = [u"Choisir"]
         pays.extend(sorted(COUNTRIES.viewvalues()))
-        self._combo_naissance_pays = MyComboBox(pays, 150)
+        self._combo_naissance_pays = MyComboBox(pays, 200)
         gridlayout.addWidget(self._combo_naissance_pays, CURRENT_LINE, 5)
 
         CURRENT_LINE += 1
@@ -133,9 +133,7 @@ class GuiDemo(QtGui.QDialog):
         gridlayout.addLayout(self._layout_couple, CURRENT_LINE, 1)
 
         gridlayout.addWidget(MyLabel(u"Depuis combien de temps?"), CURRENT_LINE, 2)
-        self._combo_couple = QtGui.QComboBox()
-        self._combo_couple.addItems(pms.COUPLE_LISTE)
-        self._combo_couple.setMaximumWidth(100)
+        self._combo_couple = MyComboBox(pms.COUPLE_LISTE, 100)
         gridlayout.addWidget(self._combo_couple, CURRENT_LINE, 3)
 
         gridlayout.addWidget(MyLabel(u"Année de naissance de votre partenaire"), CURRENT_LINE, 4)
@@ -182,9 +180,7 @@ class GuiDemo(QtGui.QDialog):
 
         # Statut socio-économique ==============================================
         gridlayout.addWidget(MyLabel(u"Niveau d'études"), CURRENT_LINE, 0)
-        self._combo_etudes = QtGui.QComboBox()
-        self._combo_etudes.addItems(pms.ANNEES_ETUDES)
-        self._combo_etudes.setMaximumWidth(100)
+        self._combo_etudes = MyComboBox(pms.ANNEES_ETUDES, 100)
         gridlayout.addWidget(self._combo_etudes, CURRENT_LINE, 1)
 
         gridlayout.addWidget(MyLabel(u"Etes-vous propriétaire de votre logement?"), CURRENT_LINE, 2)
@@ -204,7 +200,7 @@ class GuiDemo(QtGui.QDialog):
         CURRENT_LINE += 1
 
         gridlayout.addWidget(MyLabel(u"Catégorie socio-professionnelle"), CURRENT_LINE, 0)
-        self._combo_csp = MyComboBox(pms.CSP, width=200)
+        self._combo_csp = MyComboBox(pms.CSP, width=250)
         gridlayout.addWidget(self._combo_csp, CURRENT_LINE, 1, 1, 2)
 
         CURRENT_LINE += 1
