@@ -245,7 +245,7 @@ class GuiDemo(QtGui.QDialog):
 
         CURRENT_LINE += 1
 
-        gridlayout.addWidget(MyLabel(u"A quelle heure vous êtes-vous levé(e) ce matin?"),
+        gridlayout.addWidget(MyLabel(u"A quelle heure vous êtes-vous levé ce matin?"),
                              CURRENT_LINE, 0)
         self._timeedit_lever = QtGui.QTimeEdit()
         self._timeedit_lever.setDisplayFormat("HH:mm")
@@ -463,8 +463,9 @@ class GuiDemo(QtGui.QDialog):
 
         CURRENT_LINE += 1
 
-        gridlayout.addWidget(MyLabel(u"Avez-vous dormi avec quelqu'un dans "
-                                     u"votre lit cette nuit?"), CURRENT_LINE, 0)
+        gridlayout.addWidget(MyLabel(u"Cette nuit, avez-vous dormi avec "
+                                     u"quelqu’un ou avec votre animal "
+                                     u"domestique dans le même lit?"), CURRENT_LINE, 0)
         self._radio_dormi_deux_oui = QtGui.QRadioButton(u"oui")
         self._radio_dormi_deux_non = QtGui.QRadioButton(u"non")
         self._radio_dormi_deux_group = QtGui.QButtonGroup()
