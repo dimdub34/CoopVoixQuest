@@ -4,6 +4,7 @@ import logging
 from twisted.internet import defer
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey
+from datetime import datetime
 from server.servbase import Base
 from server.servparties import Partie
 from util.utiltools import get_module_attributes
@@ -53,6 +54,13 @@ class PartieCVQ(Partie):
         answers_demo = yield(self.remote.callRemote("display_demo"))
         for k, v in answers_demo.viewitems():
             setattr(self.currentperiod, k, v)
+        now = datetime.now()
+        if now.month < self.currentperiod.CVQ_naissance_mois:
+            self.currentperiod.CVQ_age = now.year - \
+                self.currentperiod.CVQ_naissance_annee - 1
+        else:
+            self.currentperiod.CVQ_age = now.year - \
+                                         self.currentperiod.CVQ_naissance_annee
         self.joueur.info(u"Ok quest. démo")
         answers_coop = yield(self.remote.callRemote("display_coop"))
         for k, v in answers_coop.viewitems():
@@ -77,6 +85,7 @@ class RepetitionsCVQ(Base):
     # demo
     CVQ_naissance_mois = Column(Integer)
     CVQ_naissance_annee = Column(Integer)
+    CVQ_age = Column(Integer)
     CVQ_naissance_pays = Column(Integer)
     CVQ_naissance_pere = Column(Integer)
     CVQ_naissance_mere = Column(Integer)
@@ -105,13 +114,52 @@ class RepetitionsCVQ(Base):
     CVQ_jour_deodorant = Column(Integer)
     CVQ_jour_parfum = Column(Integer)
     CVQ_jour_sport = Column(Integer)
+    CVQ_produits_parfumes = Column(String)
+    CVQ_vegetarien = Column(Integer)
+    CVQ_oignon = Column(Integer)
+    CVQ_ail = Column(Integer)
+    CVQ_piment = Column(Integer)
+    CVQ_curry = Column(Integer)
+    CVQ_chou = Column(Integer)
+    CVQ_celeri = Column(Integer)
+    CVQ_fromages = Column(Integer)
+    CVQ_asperges = Column(Integer)
+    CVQ_alcool = Column(Integer)
+    CVQ_malade = Column(Integer)
+    CVQ_maladie = Column(String)
+    CVQ_stress = Column(Integer)
+    CVQ_dormi_deux = Column(Integer)
+    CVQ_relation_sexuelle = Column(Integer)
+    CVQ_bien_public = Column(Integer)
 
     # coop
-    COOP_confiance = Column(Integer)
-    COOP_profite = Column(Integer)
-    COOP_altruiste = Column(Integer)
-    COOP_portefeuille_inconnu = Column(Integer)
-    COOP_portefeuille_voisin = Column(Integer)
+    # COOP_confiance = Column(Integer)
+    # COOP_profite = Column(Integer)
+    # COOP_altruiste = Column(Integer)
+    # COOP_portefeuille_inconnu = Column(Integer)
+    # COOP_portefeuille_voisin = Column(Integer)
+
+    # coop
+    COOP_1 = Column(Integer)
+    COOP_2 = Column(Integer)
+    COOP_3 = Column(Integer)
+    COOP_4 = Column(Integer)
+    COOP_5 = Column(Integer)
+    COOP_6 = Column(Integer)
+    COOP_7 = Column(Integer)
+    COOP_8 = Column(Integer)
+    COOP_9 = Column(Integer)
+    COOP_10 = Column(Integer)
+    COOP_11 = Column(Integer)
+    COOP_12 = Column(Integer)
+    COOP_13 = Column(Integer)
+    COOP_14 = Column(Integer)
+    COOP_15 = Column(Integer)
+    COOP_16 = Column(Integer)
+    COOP_17 = Column(Integer)
+    COOP_18 = Column(Integer)
+    COOP_19 = Column(Integer)
+    COOP_20 = Column(Integer)
 
     # big five
     BFT_extraverti = Column(Integer)
@@ -127,7 +175,6 @@ class RepetitionsCVQ(Base):
 
     def __init__(self, period):
         self.CVQ_period = period
-
 
     def todict(self, joueur=None):
         temp = {c.name: getattr(self, c.name) for c in self.__table__.columns}

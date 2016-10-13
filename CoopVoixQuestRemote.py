@@ -72,6 +72,8 @@ class RemoteCVQ(IRemote):
             answers["CVQ_medicaments"] = randint(0, 1)
             if answers["CVQ_medicaments"] == 1:
                 answers["CVQ_medicaments_noms"] = u"aspirine"
+            else:
+                answers["CVQ_medicaments_noms"] = u""
             answers["CVQ_chant"] = randint(0, 1)
             answers["CVQ_theatre"] = randint(0, 1)
             answers["CVQ_hier_douche"] = randint(0, 1)
@@ -81,6 +83,26 @@ class RemoteCVQ(IRemote):
             answers["CVQ_jour_deodorant"] = randint(0, 1)
             answers["CVQ_jour_parfum"] = randint(0, 1)
             answers["CVQ_jour_sport"] = randint(0, 1)
+            answers["CVQ_produits_parfumes"] = u"Texte automatique"
+            answers["CVQ_vegetarien"] = randint(0, 1)
+            answers["CVQ_oignon"] = randint(0, 1)
+            answers["CVQ_ail"] = randint(0, 1)
+            answers["CVQ_piment"] = randint(0, 1)
+            answers["CVQ_curry"] = randint(0, 1)
+            answers["CVQ_chou"] = randint(0, 1)
+            answers["CVQ_celeri"] = randint(0, 1)
+            answers["CVQ_fromages"] = randint(0, 1)
+            answers["CVQ_asperges"] = randint(0, 1)
+            answers["CVQ_alcool"] = randint(0, 1)
+            answers["CVQ_malade"] = randint(0, 1)
+            if answers["CVQ_malade"]:
+                answers["CVQ_maladie"] = u"Rhume"
+            else:
+                answers["CVQ_maladie"] = u""
+            answers["CVQ_stress"] = randint(1, 9)
+            answers["CVQ_dormi_deux"] = randint(0, 1)
+            answers["CVQ_relation_sexuelle"] = randint(0, 1)
+            answers["CVQ_bien_public"] = randint(0, 1)
 
             logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
             return answers
@@ -92,29 +114,28 @@ class RemoteCVQ(IRemote):
             ecran_demo.show()
             return defered
 
-
-    def remote_display_coop(self):
-        """
-        Display the decision screen
-        :return: deferred
-        """
-        logger.info(u"{} quest. coop".format(self._le2mclt.uid))
-        if self._le2mclt.simulation:
-            answers = {}
-            answers["COOP_confiance"] = randint(0, 1)
-            answers["COOP_profite"] = randint(1, 9)
-            answers["COOP_altruiste"] = randint(1, 4)
-            answers["COOP_portefeuille_inconnu"] = randint(1, 4)
-            answers["COOP_portefeuille_voisin"] = randint(1, 4)
-            logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
-            return answers
-        else:
-            defered = defer.Deferred()
-            ecran_coop = GuiCoop(
-                defered, self._le2mclt.automatique,
-                self._le2mclt.screen)
-            ecran_coop.show()
-            return defered
+    # def remote_display_coop(self):
+    #     """
+    #     Display the decision screen
+    #     :return: deferred
+    #     """
+    #     logger.info(u"{} quest. coop".format(self._le2mclt.uid))
+    #     if self._le2mclt.simulation:
+    #         answers = {}
+    #         answers["COOP_confiance"] = randint(0, 1)
+    #         answers["COOP_profite"] = randint(1, 9)
+    #         answers["COOP_altruiste"] = randint(1, 4)
+    #         answers["COOP_portefeuille_inconnu"] = randint(1, 4)
+    #         answers["COOP_portefeuille_voisin"] = randint(1, 4)
+    #         logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
+    #         return answers
+    #     else:
+    #         defered = defer.Deferred()
+    #         ecran_coop = GuiCoop(
+    #             defered, self._le2mclt.automatique,
+    #             self._le2mclt.screen)
+    #         ecran_coop.show()
+    #         return defered
 
     def remote_display_bigfive(self):
         """
@@ -143,5 +164,26 @@ class RemoteCVQ(IRemote):
                 defered, self._le2mclt.automatique,
                 self._le2mclt.screen)
             ecran_bigfive.show()
+            return defered
+
+
+    def remote_display_coop(self):
+        """
+        Display the decision screen
+        :return: deferred
+        """
+        logger.info(u"{} quest. coop".format(self._le2mclt.uid))
+        if self._le2mclt.simulation:
+            answers = {}
+            for i in range(1, 21):
+                answers["COOP_{}".format(i)] = randint(1, 5)
+            logger.info(u"{} Send back {}".format(self._le2mclt.uid, answers))
+            return answers
+        else:
+            defered = defer.Deferred()
+            ecran_coop = GuiCoop(
+                defered, self._le2mclt.automatique,
+                self._le2mclt.screen)
+            ecran_coop.show()
             return defered
 

@@ -45,6 +45,46 @@ ACCORD = [U"Choisir", u"Fortement en désaccord", u"En désaccord",
 FREQUENCE = [u"Choisir", u"Jamais", u"Une fois", u"Plus d'une fois",
              u"Souvent", u"Très souvent"]
 
+STRESS = [u"Choisir", u"1 - Très calme", u"2", u"3", u"4", u"5", u"6", u"7",
+          u"8 - Très stressé"]
+
+COOPERATION = {}
+COOPERATION[1] = u"J’ai aidé une personne inconnue à pousser sa voiture qui était en panne"
+COOPERATION[2] = u"J’ai aidé une personne inconnue à trouver son chemin"
+COOPERATION[3] = u"J’ai fait la monnaie à une personne inconnue"
+COOPERATION[4] = u"J’ai donné de l’argent à une organisation caritative"
+COOPERATION[5] = U"J’ai donné de l’argent à une personne inconnue qui en avait<br />" \
+                 U"besoin (ou qui m’en a demandé)"
+COOPERATION[6] = u"J’ai donné des biens ou des vêtements à une organisation caritative"
+COOPERATION[7] = u"J’ai travaillé bénévolement dans une organisation caritative"
+COOPERATION[8] = u"J’ai donné mon sang"
+COOPERATION[9] = u"J’ai aidé une personne inconnue à porter ses affaires (sacs,<br />" \
+                 u"colis, poussette, etc.)"
+COOPERATION[10] = u"J’ai retardé un ascenseur et maintenu les portes ouvertes<br/>" \
+                  u"pour une personne inconnue"
+COOPERATION[11] = u"J’ai permis à une personne inconnue de se placer devant moi <br />" \
+                  u"dans une file d’attente (dans un supermarché, devant une<br />" \
+                  u"imprimante, dans un restaurant)"
+COOPERATION[12] = u"J’ai pris un autostoppeur dans ma voiture"
+COOPERATION[13] = u"J’ai signalé à un caissier/une caissière qu’il/elle avait<br />" \
+                  u"fait une erreur en ma faveur (m’avait rendu trop de monnaie,<br />" \
+                  u"avait oublié de compter un article, etc.)"
+COOPERATION[14] = u"J’ai prêté un objet qui avait une certaine valeur à mes<br />" \
+                  u"yeux à un voisin que je ne connaissais pas (de la vaisselle,<br />" \
+                  u"des outils, etc.)"
+COOPERATION[15] = u"J’ai acheté des cartes postales à une organisation<br />" \
+                  u"caritative car je savais que c’était pour une bonne cause"
+COOPERATION[16] = u"J’ai aidé un camarade de classe que je ne connaissais pas<br />" \
+                  u"très bien et qui avait des difficultés à faire ses devoirs"
+COOPERATION[17] = u"J’ai volontairement surveillé les enfants ou les animaux <br />" \
+                  u"d’un de mes voisins, avant même qu’on me le demande et<br />" \
+                  u"sans avoir été payé pour le faire."
+COOPERATION[18] = u"J’ai aidé un handicapé ou une personne âgée à traverser<br />" \
+                  u"une rue"
+COOPERATION[19] = u"J’ai offert ma place à une personne inconnue qui était<br />" \
+                  u"debout dans le bus ou le train"
+COOPERATION[20] = u"J’ai aidé une connaissance à déménager"
+
 # parameters -------------------------------------------------------------------
 NOMBRE_PERIODES = 0
 TAILLE_GROUPES = 0
