@@ -3,6 +3,7 @@
 This module contains the GUI
 """
 
+import os
 import logging
 from PyQt4 import QtGui, QtCore
 from util.utili18n import le2mtrans
@@ -13,6 +14,7 @@ from CoopVoixQuestTexts import trans_CVQ
 import CoopVoixQuestTexts as texts_CVQ
 from client.cltgui.cltguiwidgets import WExplication
 from configuration.configvar import COUNTRIES
+from util.utiltools import get_parent_folder
 
 
 logger = logging.getLogger("le2m")
@@ -390,7 +392,7 @@ class GuiDemo(QtGui.QDialog):
             [self._radio_jour_sport_oui, self._radio_jour_sport_non])
         gridlayout.addLayout(self._layout_jour_sport, CURRENT_LINE, 1)
 
-        gridlayout.addWidget(MyLabel(u"Indiquer les autres produits parfumés "
+        gridlayout.addWidget(MyLabel(u"Indiquer les autres produits parfumés<br />"
                                      u"que vous avez utilisés depuis hier soir"),
                              CURRENT_LINE, 2)
         self._lineedit_produits_parfumes = QtGui.QLineEdit()
@@ -464,7 +466,7 @@ class GuiDemo(QtGui.QDialog):
         CURRENT_LINE += 1
 
         gridlayout.addWidget(MyLabel(u"Cette nuit, avez-vous dormi avec "
-                                     u"quelqu’un ou avec votre animal "
+                                     u"quelqu’un ou<br />avec votre animal "
                                      u"domestique dans le même lit?"), CURRENT_LINE, 0)
         self._radio_dormi_deux_oui = QtGui.QRadioButton(u"oui")
         self._radio_dormi_deux_non = QtGui.QRadioButton(u"non")
@@ -896,8 +898,17 @@ class GuiBigFiveTen(QtGui.QDialog):
                  u"vous correspondre. Veuillez indiquer dans quelle mesure vous "
                  u"pensez qu'ils vous correspondent. Veuillez évaluer la paire "
                  u"de caractéristiques, même si une des caractéristiques "
-                 u"s'applique plus que l'autre.", html=False, size=(600, 80))
+                 u"s'applique plus que l'autre.", html=False, size=(656, 80))
         layout.addWidget(explanation)
+
+        img_echelle = QtGui.QPixmap(os.path.join(get_parent_folder(__file__), "echelle_accord.png"))
+        label_echelle = QtGui.QLabel()
+        label_echelle.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        label_echelle.setPixmap(img_echelle)
+        layout.addWidget(label_echelle)
+
+        layout.addSpacerItem(
+            QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum))
 
         gridlayout = QtGui.QGridLayout()
         gridlayout.setHorizontalSpacing(20)
