@@ -898,7 +898,8 @@ class GuiBigFiveTen(QtGui.QDialog):
                  u"vous correspondre. Veuillez indiquer dans quelle mesure vous "
                  u"pensez qu'ils vous correspondent. Veuillez évaluer la paire "
                  u"de caractéristiques, même si une des caractéristiques "
-                 u"s'applique plus que l'autre.", html=False, size=(656, 80))
+                 u"s'applique plus que l'autre. Pour répondre, veuillez "
+                 u"utiliser l'échelle ci-dessous.", html=False, size=(656, 80))
         layout.addWidget(explanation)
 
         img_echelle = QtGui.QPixmap(os.path.join(get_parent_folder(__file__), "echelle_accord.png"))
